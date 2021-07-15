@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="row">
+      <div class="main-bar creator">
+        <span class="display-4 d-flex justify-content-center">Test</span>
+        <form>
+          <label for="test-title">Test title:</label>
+          <input type="text" class="form-control" name="test-title" readonly>
+          <label for="short-description">Short description:</label>
+          <textarea maxlength="200" rows="4" readonly class="form-control mb-4" name="short-description"></textarea>
+          <div class="question mt-4">
+            <label for="test-type">Question type:</label>
+            <input class="form-control mb-3" name="test-type" value="Text" readonly>
+            <label for="question">Question:</label>
+            <input type="text" class="form-control" name="test-question" readonly>
+            <label for="question">Answers:</label>
+            <input type="text" class="form-control" name="test-question">
+          </div>
+          <div class="question mt-4">
+            <label for="test-type">Question type:</label>
+            <input class="form-control mb-3" name="test-type" value="Single choice" readonly>
+            <label for="question">Question:</label>
+            <input type="text" class="form-control" name="test-question" readonly>
+            <label for="question">Answers:</label>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="question-1" value="checkedValue" checked>
+                First option
+              </label><br>
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="question-1" value="checkedValue">
+                Second option
+              </label><br>
+              <label class="form-check-label">
+                <input type="radio" class="form-check-input" name="question-1" value="checkedValue">
+                Third option
+              </label><br>
+            </div>
+          </div>
+          <div class="question mt-4">
+            <label for="test-type">Question type:</label>
+            <input class="form-control mb-3" name="test-type" value="Multiple choice" readonly>
+            <label for="question">Question:</label>
+            <input type="text" class="form-control" name="test-question" readonly>
+            <label for="question">Answers:</label>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" 
+                name="question-2" value="checkedValue">
+                First option
+              </label><br>
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" 
+                name="question-2" value="checkedValue">
+                Second option
+              </label><br>
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" 
+                name="question-2" value="checkedValue">
+                Third option
+              </label><br>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary btn-block btn-lg mt-4">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
