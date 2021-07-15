@@ -1,0 +1,59 @@
+﻿<div class="container-fluid p-0">
+  <nav class="navbar bg-skyblue d-block w-100 nav-position" id="nav">
+    <div class="container">
+      <div class="row w-100">
+        <div class="col-lg-3">
+          <a class="navbar-brand text-dark title ml-3" routerLink="">
+            <i class="fas fa-vials mr-2"></i>
+            ITest
+          </a>
+        </div>
+        <div class="col-lg ml-2">
+          <div class="row">
+            <div class="col-lg pl-3 pr-0">
+              <div class="nav-button">
+                <a routerLink="/profile">
+                  Profile
+                </a>
+              </div>
+            </div>
+            <div class="col-lg pl-3 pr-0">
+              <div class="nav-button">
+                <a routerLink="creator" style="white-space: nowrap;">
+                  Create test
+                </a>
+              </div>
+            </div>
+            <div class="col-lg pl-3 pr-0">
+              <div class="nav-button">
+                <a routerLink="search">
+                  Search
+                </a>
+              </div>
+            </div>
+            <div class="col-lg pl-3 pr-0">
+              <div class="nav-button">
+                <a routerLink="login">
+                  Login
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3"></div>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<div class="mt-lg-5">
+
+  <router-outlet></router-outlet>
+
+  <footer class="footer p-3 mt-3">
+    <div class="container">
+      <div class="text-muted">
+      </div>
+    </div>
+  </footer>
+</div>

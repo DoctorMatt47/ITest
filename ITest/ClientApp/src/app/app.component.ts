@@ -2,8 +2,8 @@
 
 @Component({
     selector: 'app',
-    template: ``
+    templateUrl: './app.component.html',
+    styleUrls: []
 })
 export class AppComponent {
-    name = '';
 }
