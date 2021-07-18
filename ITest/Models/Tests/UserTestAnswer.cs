@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ITest.Models.Users;
 
-namespace ITest.Models.Test
+namespace ITest.Models.Tests
 {
     public class UserTestAnswer : BaseEntity
     {
