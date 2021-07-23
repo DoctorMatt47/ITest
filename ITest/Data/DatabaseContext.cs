@@ -1,4 +1,5 @@
 ﻿using ITest.Models.Tests;
+using ITest.Models.Accounts;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITest.Data
@@ -10,6 +11,7 @@ namespace ITest.Data
         public DbSet<AnswerChoice> AnswerChoices { get; set; }
         public DbSet<UserTestAnswer> TestAnswers { get; set; }
         public DbSet<UserQuestionAnswer> QuestionAnswers { get; set; }
+        public DbSet<Account> Accounts { get; set; }
 
         public DatabaseContext()
         {
