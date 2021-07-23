@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using ITest.Models.Users;
+using ITest.Models.Accounts;
 
 namespace ITest.Models.Tests
 {
     public class UserTestAnswer : BaseEntity
     {
-        public User User { get; set; }
+        public Account User { get; set; }
 
         public List<UserQuestionAnswer> QuestionAnswers { get; set; } = new List<UserQuestionAnswer>();
 
