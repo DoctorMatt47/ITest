@@ -19,13 +19,30 @@ namespace ITest.Controllers
     {
         private readonly DatabaseContext _db;
 
-        [HttpPost]
-        public async Task<IActionResult> Login(User p)
+        public AccountController(DatabaseContext db) => _db = db;
+
+        private async Task<ClaimsIdentity> GetIdentityAsync(string username, string password)
         {
-            var identity = await GetIdentity(p.Login, p.Password);
+            var person = await _db.Accounts.FirstOrDefaultAsync(x =>
+                x.Login == username && x.Password == password);
+            if (person == null) return null;
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, person.Login)
+            };
+            var claimsIdentity = new
+                ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
+                    ClaimsIdentity.DefaultRoleClaimType);
+            return claimsIdentity;
+        }
+
+        [HttpPost("/login")]
+        public async Task<IActionResult> LoginAsync(Account user)
+        {
+            var identity = await GetIdentityAsync(user.Login, user.Password);
             if (identity == null)
             {
-                return BadRequest(new { errorText = "Invalid username or password." });
+                return BadRequest(new {errorText = "Invalid username or password."});
             }
 
             var now = DateTime.UtcNow;
@@ -36,8 +53,11 @@ namespace ITest.Controllers
                 notBefore: now,
                 claims: identity.Claims,
                 expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
-                SecurityAlgorithms.HmacSha256));
+                signingCredentials: new SigningCredentials
+                (
+                    AuthOptions.GetSymmetricSecurityKey(),
+                    SecurityAlgorithms.HmacSha256)
+            );
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             var response = new
@@ -49,18 +69,37 @@ namespace ITest.Controllers
             return Json(response);
         }
 
-        private async Task<ClaimsIdentity> GetIdentity(string username, string password)
+        [HttpPost("/register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] Account user)
         {
-            var person = await _db.Users.FirstOrDefaultAsync(x => x.Login == username && x.Password == password);
-            if (person == null) return null;
-            var claims = new List<Claim>
+            if (user is null)
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, person.Login)
+                return BadRequest(new {errorText = "User is null"});
+            }
+
+            var account = await _db.Accounts.FirstOrDefaultAsync(acc
+                => acc.Login == user.Login || acc.Mail == user.Mail);
+            if (account.Login == user.Login)
+            {
+                return BadRequest(new {errorText = "An account with this login already exists"});
+            }
+
+            if (account.Mail == user.Mail)
+            {
+                return BadRequest(new {errorText = "An account with this mail already exists"});
+            }
+
+            var newAccount = new Account
+            {
+                Id = new Guid(),
+                Login = user.Login,
+                Password = user.Password,
+                Mail = user.Mail,
+                City = user.City,
             };
-            var claimsIdentity = new
-                ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
-            return claimsIdentity;
+            await _db.Accounts.AddAsync(newAccount);
+            await _db.SaveChangesAsync();
+            return Ok(newAccount);
         }
     }
 }
