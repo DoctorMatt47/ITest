@@ -8,7 +8,7 @@ namespace ITest.Models
     {
         [Key]
         [NotNull]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
         public DateTime CreatedDateTime { get; set; } = DateTime.UtcNow;
         public DateTime? ModifiedDateTime { get; set; }
     }
