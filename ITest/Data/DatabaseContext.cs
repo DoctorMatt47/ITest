@@ -6,16 +6,14 @@ namespace ITest.Data
 {
     public class DatabaseContext : DbContext
     {
-        public DbSet<Test> Tests { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<AnswerChoice> AnswerChoices { get; set; }
-        public DbSet<UserTestAnswer> TestAnswers { get; set; }
-        public DbSet<UserQuestionAnswer> QuestionAnswers { get; set; }
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Test> Tests { get; set; } = default!;
+        public DbSet<Question> Questions { get; set; } = default!;
+        public DbSet<Choice> Choices { get; set; } = default!;
+        public DbSet<TestAnswer> TestAnswers { get; set; } = default!;
+        public DbSet<Account> Accounts { get; set; } = default!;
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
-            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
