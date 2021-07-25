@@ -13,14 +13,14 @@ namespace ITest.Data
         public DbSet<UserQuestionAnswer> QuestionAnswers { get; set; }
         public DbSet<Account> Accounts { get; set; }
 
-        public DatabaseContext()
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
             Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=ITest.db;Cache=Shared");
+
         }
     }
 }

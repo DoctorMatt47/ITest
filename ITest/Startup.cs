@@ -1,8 +1,10 @@
 using ITest.Configs;
+using ITest.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +17,9 @@ namespace ITest
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlite("Data Source=ITest.db;Cache=Shared"));
+                
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
                 AddJwtBearer(options =>
                 {
@@ -44,6 +49,7 @@ namespace ITest
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,8 +67,15 @@ namespace ITest
                 app.UseSpaStaticFiles();
             }
 
+            app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.UseSpa(spa =>
             {
