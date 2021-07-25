@@ -14,7 +14,7 @@ namespace ITest.Attributes
             _max = max;
         }
         
-        public override bool IsValid(object value) => value switch
+        public override bool IsValid(object? value) => value switch
         {
             null => true,
             ICollection collection => _min < collection.Count && collection.Count < _max,

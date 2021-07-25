@@ -5,15 +5,14 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ITest.Models.Tests
 {
-    public class AnswerChoice : BaseEntity
+    public class Choice : BaseEntity
     {
-        [NotNull]
         [StringLength(100, MinimumLength=1)]
-        public string AnswerString { get; set; }
+        public string? ChoiceString { get; set; }
 
         public Guid QuestionId { get; set; }
-        public Question Question { get; set; }
-
-        public List<UserQuestionAnswer> QuestionAnswers { get; set; } = new List<UserQuestionAnswer>();
+        public Question Question { get; set; } = default!;
+        
+        public List<TestAnswer> TestAnswers { get; set; } = new List<TestAnswer>();
     }
 }
