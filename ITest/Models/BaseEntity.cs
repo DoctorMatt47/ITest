@@ -1,11 +1,15 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ITest.Models
 {
     public abstract class BaseEntity
     {
-        public virtual Guid Id { get; set; }
-        public DateTime CreatedDateTime { get; set; }
+        [Key]
+        [NotNull]
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public DateTime CreatedDateTime { get; set; } = DateTime.UtcNow;
         public DateTime? ModifiedDateTime { get; set; }
     }
 }
