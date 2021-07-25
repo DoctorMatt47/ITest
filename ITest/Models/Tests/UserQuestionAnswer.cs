@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ITest.Models.Tests
 {
-    public class UserQuestionAnswer
+    public class UserQuestionAnswer : BaseEntity
     {
         public Guid QuestionId { get; set; }
         public Question Question { get; set; }
