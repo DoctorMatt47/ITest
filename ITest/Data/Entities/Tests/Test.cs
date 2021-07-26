@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using ITest.Attributes;
-using ITest.Data.Entities;
 using ITest.Data.Entities.Accounts;
+using ITest.Models.Tests;
 
-namespace ITest.Models.Tests
+namespace ITest.Data.Entities.Tests
 {
     public class Test : BaseEntity
     {

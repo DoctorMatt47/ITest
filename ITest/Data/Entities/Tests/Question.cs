@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-using ITest.Attributes;
-using ITest.Data.Entities;
+using ITest.Models.Tests;
 
-namespace ITest.Models.Tests
+namespace ITest.Data.Entities.Tests
 {
     public class Question : BaseEntity
     {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ITest.Data.Entities.Tests;
 using ITest.Models;
 using ITest.Models.Tests;
 

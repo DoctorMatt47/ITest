@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using ITest.Data.Entities;
 using ITest.Data.Entities.Accounts;
 
-namespace ITest.Models.Tests
+namespace ITest.Data.Entities.Tests
 {
     public class TestAnswer : BaseEntity
     {
         [StringLength(100, MinimumLength=1)]
         public string Answer { get; set; }
-            
+
         public Guid? ChoiceId { get; set; }
         public Choice Choice { get; set; }
 
