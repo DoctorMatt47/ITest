@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+using ITest.Models;
 using ITest.Models.Tests;
 
-namespace ITest.Models.Accounts
+namespace ITest.Data.Entities.Accounts
 {
     public class Account : BaseEntity
     {
-        [NotNull]
-        [Required(ErrorMessage = "Login is required")]
+        [Required]
+        [MaxLength(30)]
         public string Login { get; set; }
         
-        [NotNull]
-        [Required(ErrorMessage = "Login is required")]
+        [Required]
+        [MaxLength(100)]
         public string Password { get; set; }
         
-        [NotNull]
-        [EmailAddress]
-        [Required(ErrorMessage = "Login is required")]
+        [Required]
+        [MaxLength(100)]
         public string Mail { get; set; }
         
+        [MaxLength(100)]
         public string City { get; set; }
         
         public AccountRole Role { get; set; } = AccountRole.User;

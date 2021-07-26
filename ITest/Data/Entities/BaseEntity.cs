@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ITest.Models
+namespace ITest.Data.Entities
 {
     public abstract class BaseEntity
     {

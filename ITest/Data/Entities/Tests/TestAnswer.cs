@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using ITest.Models.Accounts;
+using ITest.Data.Entities;
+using ITest.Data.Entities.Accounts;
 
 namespace ITest.Models.Tests
 {

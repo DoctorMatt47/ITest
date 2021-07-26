@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using ITest.Attributes;
+using ITest.Data.Entities;
 
 namespace ITest.Models.Tests
 {
     public class Question : BaseEntity
     {
-        [NotNull]
-        public string QuestionString { get; set; } = string.Empty;
+        [Required]
+        [MaxLength(255)]
+        public string QuestionString { get; set; }
         public QuestionType QuestionType { get; set; }
 
         public Guid TestId { get; set; }
         public Test Test { get; set; } = default!;
-
-        [CollectionCount(0, 50)]
+        
         public List<Choice> Choices { get; set; } = new List<Choice>();
         public List<TestAnswer> TestAnswers { get; set; } = new List<TestAnswer>();
     }

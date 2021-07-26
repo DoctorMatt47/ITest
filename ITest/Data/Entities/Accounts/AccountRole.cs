@@ -1,4 +1,4 @@
-﻿namespace ITest.Models.Accounts
+﻿namespace ITest.Data.Entities.Accounts
 {
     public enum AccountRole : byte
     {
