@@ -6,6 +6,7 @@ namespace ITest.Data.Entities.Tests
 {
     public class Choice : BaseEntity
     {
+        [Required]
         [MaxLength(255)]
         public string ChoiceString { get; set; }
 
