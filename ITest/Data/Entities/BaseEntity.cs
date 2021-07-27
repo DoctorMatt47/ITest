@@ -9,7 +9,7 @@ namespace ITest.Data.Entities
         [Key]
         [Required]
         public Guid Id { get; set; }
-        public DateTime CreatedDateTime { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDateTime { get; set; }
         public DateTime? ModifiedDateTime { get; set; }
     }
 }
