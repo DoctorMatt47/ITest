@@ -1,4 +1,4 @@
-﻿namespace ITest.Models.Tests
+﻿namespace ITest.Data.Entities.Tests
 {
     public enum QuestionType : byte
     {

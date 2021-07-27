@@ -1,6 +1,5 @@
 ﻿using ITest.Data.Entities.Accounts;
 using ITest.Data.Entities.Tests;
-using ITest.Models.Tests;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITest.Data

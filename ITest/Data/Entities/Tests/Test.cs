@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ITest.Data.Entities.Accounts;
-using ITest.Models.Tests;
 
 namespace ITest.Data.Entities.Tests
 {
@@ -16,7 +15,7 @@ namespace ITest.Data.Entities.Tests
         [MaxLength(500)]
         public string Description { get; set; }
 
-        public uint VisitorsCount { get; set; } = 0;
+        public uint VisitorsCount { get; set; }
         
         public Guid AccountId { get; set; }
         public Account Account { get; set; }

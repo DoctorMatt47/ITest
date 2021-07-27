@@ -7,7 +7,7 @@ namespace ITest.Data.Entities
     public abstract class BaseEntity
     {
         [Key]
-        [NotNull]
+        [Required]
         public Guid Id { get; set; }
         public DateTime CreatedDateTime { get; set; } = DateTime.UtcNow;
         public DateTime? ModifiedDateTime { get; set; }
