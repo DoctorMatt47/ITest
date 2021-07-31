@@ -22,10 +22,10 @@ namespace ITest.Data.Entities.Accounts
         public string City { get; set; }
         
         public AccountRole Role { get; set; } = AccountRole.User;
-        
-        public bool IsConfirmed { get; set; }
 
-        public List<Test> Tests { get; set; }
-        public List<TestAnswer> TestAnswers { get; set; }
+        public bool IsConfirmed { get; set; } = false;
+
+        public List<Test> Tests { get; set; } = new List<Test>();
+        public List<TestAnswer> TestAnswers { get; set; } = new List<TestAnswer>();
     }
 }
