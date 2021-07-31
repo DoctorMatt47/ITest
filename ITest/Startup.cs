@@ -1,5 +1,13 @@
+using System.Reflection;
+using AutoMapper;
+using FluentValidation;
 using ITest.Configs;
+using ITest.Configs.Profiles;
 using ITest.Data;
+using ITest.Data.Dtos.Tests;
+using ITest.Data.Entities.Tests;
+using ITest.Data.Validators;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,36 +27,43 @@ namespace ITest
         {
             services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlite("Data Source=ITest.db;Cache=Shared"));
-                
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
-                AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        // указывает, будет ли валидироваться издатель при валидации токена
-                        ValidateIssuer = true,
-                        // строка, представляющая издателя
-                        ValidIssuer = AuthOptions.ISSUER,
 
-                        // будет ли валидироваться потребитель токена
-                        ValidateAudience = true,
-                        // установка потребителя токена
-                        ValidAudience = AuthOptions.AUDIENCE,
-                        // будет ли валидироваться время существования
-                        ValidateLifetime = true,
-
-                        // установка ключа безопасности
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        // валидация ключа безопасности
-                        ValidateIssuerSigningKey = true,
-                    };
-                });
-
-            services.AddSpaStaticFiles(configuration =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    // указывает, будет ли валидироваться издатель при валидации токена
+                    ValidateIssuer = true,
+                    // строка, представляющая издателя
+                    ValidIssuer = AuthOptions.ISSUER,
+
+                    // будет ли валидироваться потребитель токена
+                    ValidateAudience = true,
+                    // установка потребителя токена
+                    ValidAudience = AuthOptions.AUDIENCE,
+                    // будет ли валидироваться время существования
+                    ValidateLifetime = true,
+
+                    // установка ключа безопасности
+                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                    // валидация ключа безопасности
+                    ValidateIssuerSigningKey = true,
+                };
             });
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new TestProfile());
+            });
+
+            services.AddSingleton(mapperConfig.CreateMapper());
+            
+            services.AddTransient<IValidator<TestDto>, TestValidator>();
+            services.AddTransient<IValidator<QuestionDto>, QuestionValidator>();
+
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
             services.AddControllers();
         }
 
@@ -72,10 +87,7 @@ namespace ITest
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.UseSpa(spa =>
             {
