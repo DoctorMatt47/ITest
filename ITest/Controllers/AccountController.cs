@@ -1,6 +1,5 @@
 ﻿using ITest.Configs;
 using ITest.Data;
-using ITest.Models.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -9,26 +8,31 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
+using ITest.Cqrs.Accounts;
+using ITest.Data.Entities.Accounts;
+using ITest.Exceptions;
+using MediatR;
 
 namespace ITest.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/accounts")]
     public class AccountController : Controller
     {
-        private readonly DatabaseContext _db;
+        private readonly IMediator _mediator;
 
-        public AccountController(DatabaseContext db) => _db = db;
+        public AccountController(IMediator mediator) => _mediator = mediator;
 
-        private async Task<ClaimsIdentity> GetIdentityAsync(string username, string password)
+        private async Task<ClaimsIdentity> GetIdentityAsync(GetAccountByLoginAndPasswordQuery query,
+            CancellationToken cancellationToken)
         {
-            var person = await _db.Accounts.FirstOrDefaultAsync(x =>
-                x.Login == username && x.Password == password);
-            if (person == null) return null;
+            var userAccount = await _mediator.Send(query, cancellationToken);
+            if (userAccount == null) return null;
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, person.Login)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userAccount.Login)
             };
             var claimsIdentity = new
                 ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
@@ -37,9 +41,10 @@ namespace ITest.Controllers
         }
 
         [HttpPost("/login")]
-        public async Task<IActionResult> LoginAsync(Account user)
+        public async Task<IActionResult> LoginAsync([FromBody] GetAccountByLoginAndPasswordQuery query,
+            CancellationToken cancellationToken)
         {
-            var identity = await GetIdentityAsync(user.Login, user.Password);
+            var identity = await GetIdentityAsync(query, cancellationToken);
             if (identity == null)
             {
                 return BadRequest(new {errorText = "Invalid username or password."});
@@ -69,37 +74,22 @@ namespace ITest.Controllers
             return Json(response);
         }
 
-        [HttpPost("/register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] Account user)
+        [HttpPost]
+        public async Task<IActionResult> RegisterAsync([FromBody] AddAccountCommand command,
+            CancellationToken cancellationToken)
         {
-            if (user is null)
+            Account newAccount;
+            try
             {
-                return BadRequest(new {errorText = "User is null"});
+                newAccount = await _mediator.Send(command, cancellationToken);
             }
-
-            var account = await _db.Accounts.FirstOrDefaultAsync(acc
-                => acc.Login == user.Login || acc.Mail == user.Mail);
-            if (account.Login == user.Login)
+            catch (AccountException e)
             {
-                return BadRequest(new {errorText = "An account with this login already exists"});
+                return BadRequest(new {errorText = e.Message});
             }
-
-            if (account.Mail == user.Mail)
-            {
-                return BadRequest(new {errorText = "An account with this mail already exists"});
-            }
-
-            var newAccount = new Account
-            {
-                Id = new Guid(),
-                Login = user.Login,
-                Password = user.Password,
-                Mail = user.Mail,
-                City = user.City,
-            };
-            await _db.Accounts.AddAsync(newAccount);
-            await _db.SaveChangesAsync();
-            return Ok(newAccount);
+            const string domain = "localhost:5001";
+            var uriString = $"https://{domain}/test/{newAccount.Id}";
+            return Created(new Uri(uriString), newAccount);
         }
     }
 }
