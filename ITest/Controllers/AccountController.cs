@@ -32,11 +32,13 @@ namespace ITest.Controllers
             if (userAccount == null) return null;
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userAccount.Login)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userAccount.Login),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, userAccount.Role.ToString())
             };
-            var claimsIdentity = new
-                ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
+            var claimsIdentity = new ClaimsIdentity(
+                claims, "Token", 
+                ClaimsIdentity.DefaultNameClaimType,
+                ClaimsIdentity.DefaultRoleClaimType);
             return claimsIdentity;
         }
 
