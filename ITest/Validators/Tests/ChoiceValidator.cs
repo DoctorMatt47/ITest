@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using ITest.Data.Dtos.Tests;
 
-namespace ITest.Data.Validators
+namespace ITest.Validators.Tests
 {
     public class ChoiceValidator: AbstractValidator<ChoiceDto>
     {

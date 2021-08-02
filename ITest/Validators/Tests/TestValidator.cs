@@ -1,9 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using FluentValidation;
 using ITest.Data.Dtos.Tests;
-using ITest.Data.Entities.Tests;
 
-namespace ITest.Data.Validators
+namespace ITest.Validators.Tests
 {
     public class TestValidator : AbstractValidator<TestDto>
     {
@@ -28,8 +27,8 @@ namespace ITest.Data.Validators
 
         private static bool IsTitleValid(string t)
         {
-            var regex = "^[a-zA-Z0-9!? ]*$";
-            return Regex.IsMatch(t, "^[a-zA-Z0-9!? ]*$", RegexOptions.IgnoreCase);
+            const string regex = "^[a-zA-Z0-9!? ]*$";
+            return Regex.IsMatch(t, regex, RegexOptions.IgnoreCase);
         }
     }
 }
