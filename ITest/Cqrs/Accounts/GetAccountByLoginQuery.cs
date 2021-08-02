@@ -5,6 +5,8 @@ namespace ITest.Cqrs.Accounts
 {
     public class GetAccountByLoginQuery : IRequest<Account>
     {
-        public string Login { get; set; }
+        public GetAccountByLoginQuery(string login) => Login = login;
+        
+        public string Login { get; }
     }
 }

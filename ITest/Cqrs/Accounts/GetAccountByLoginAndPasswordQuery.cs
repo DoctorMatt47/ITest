@@ -5,7 +5,13 @@ namespace ITest.Cqrs.Accounts
 {
     public class GetAccountByLoginAndPasswordQuery : IRequest<Account>
     {
-        public string Login { get; set; }
-        public string Password { get; set; }
+        public GetAccountByLoginAndPasswordQuery(string login, string password)
+        {
+            Login = login;
+            Password = password;
+        }
+
+        public string Login { get; }
+        public string Password { get; }
     }
 }
