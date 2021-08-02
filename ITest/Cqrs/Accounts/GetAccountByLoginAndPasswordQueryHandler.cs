@@ -14,15 +14,12 @@ namespace ITest.Cqrs.Accounts
         {
         }
 
-        public async Task<Account> Handle(GetAccountByLoginAndPasswordQuery query, CancellationToken cancellationToken)
-        {
-            var accountToGet = await _db.Accounts.FirstOrDefaultAsync(
+        public async Task<Account> Handle(GetAccountByLoginAndPasswordQuery query,
+            CancellationToken cancellationToken) =>
+            await _db.Accounts.FirstOrDefaultAsync(
                 acc => 
-                (acc.Login == query.Login || acc.Mail == query.Login) &&
-                acc.Password == query.Password,
-                cancellationToken: cancellationToken);
-
-            return accountToGet;
-        }
+                    (acc.Login == query.Login || acc.Mail == query.Login) &&
+                    acc.Password == query.Password,
+                cancellationToken);
     }
 }
