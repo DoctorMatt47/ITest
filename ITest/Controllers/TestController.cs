@@ -37,25 +37,15 @@ namespace ITest.Controllers
             _testValidator = testValidator;
             _mapper = mapper;
         }
-
+        
 
         [HttpGet]
-        public async Task<IEnumerable<Test>> Get()
+        public async Task<ActionResult<Test>> Get(GetTestByIdQuery query, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-            //return await _db.Tests.ToListAsync();
-        }
-
-        [HttpGet()]
-        public async Task<ActionResult<Test>> Get(Guid id)
-        {
-            //var test = await _testRepos.GetByIdAsync(id);
-            //if (test is null)
-            //{
-            //    return NotFound();
-            //}
-            throw new NotImplementedException();
-            //return Ok(test);
+            var testToGet = await _mediator.Send(query, cancellationToken);
+            if (testToGet is null)
+                return NotFound();
+            return Ok(testToGet);
         }
 
         [HttpPost, Authorize]
