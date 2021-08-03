@@ -9,6 +9,6 @@ namespace ITest.Cqrs.Questions
     {
         public GetQuestionsByTestIdQuery(Guid testId) => TestId = testId;
         
-        public Guid TestId { get; }
+        public Guid TestId { get; set; }
     }
 }

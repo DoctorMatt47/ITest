@@ -7,6 +7,6 @@ namespace ITest.Cqrs.Accounts
     {
         public GetAccountByLoginQuery(string login) => Login = login;
         
-        public string Login { get; }
+        public string Login { get; set; }
     }
 }

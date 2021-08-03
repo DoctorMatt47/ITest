@@ -11,7 +11,7 @@ namespace ITest.Cqrs.Accounts
             Password = password;
         }
 
-        public string Login { get; }
-        public string Password { get; }
+        public string Login { get; set; }
+        public string Password { get; set; }
     }
 }

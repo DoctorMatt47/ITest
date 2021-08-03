@@ -9,6 +9,6 @@ namespace ITest.Cqrs.Choices
     {
         public GetChoicesByQuestionIdQuery(Guid questionId) => QuestionId = questionId;
 
-        public Guid QuestionId { get; }
+        public Guid QuestionId { get; set; }
     }
 }

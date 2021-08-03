@@ -11,6 +11,6 @@ namespace ITest.Cqrs.Accounts
             AccountId = accountId;
         }
 
-        public Guid AccountId { get; }
+        public Guid AccountId { get; set; }
     }
 }

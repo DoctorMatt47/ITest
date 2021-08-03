@@ -8,6 +8,6 @@ namespace ITest.Cqrs.Tests
     {
         public GetTestByIdQuery(Guid testId) => TestId = testId;
         
-        public Guid TestId { get; }
+        public Guid TestId { get; set; }
     }
 }
