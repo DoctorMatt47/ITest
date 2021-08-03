@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using ITest.Data;
 using ITest.Data.Dtos.Tests;
 using ITest.Data.Entities.Tests;
+using ITest.Exceptions.Tests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +61,7 @@ namespace ITest.Controllers
         [HttpPost, Authorize]
         public async Task<ActionResult<Test>> Post([FromBody] TestDto dto, CancellationToken cancellationToken)
         {
-            if (User.Identity == null)
+            if (User.Identity is null)
             {
                 return Unauthorized();
             }
@@ -87,24 +88,59 @@ namespace ITest.Controllers
             return Created(new Uri(uriString), new {createdTest.Id, createdTestDto});
         }
 
-        [HttpPut]
+        [HttpPut, Authorize]
         public async Task<ActionResult<Test>> Put([FromQuery] Guid id, [FromBody] TestDto dto,
             CancellationToken cancellationToken)
         {
+            if (User.Identity is null)
+            {
+                return Unauthorized();
+            }
+            
+            var userAccount =
+                await _mediator.Send(new GetAccountByLoginQuery(User.Identity.Name), cancellationToken);
+            
             var updateTestCommand = new UpdateTestCommand
             {
-                AccountId = Guid.Parse("F4138C2D-A800-444A-8B23-1E8F910BA607"),
+                AccountId = userAccount.Id,
                 TestId = id,
                 TestDto = dto
             };
-            var updatedTest = await _mediator.Send(updateTestCommand, cancellationToken);
+            
+            Test updatedTest;
+            try
+            {
+                updatedTest = await _mediator.Send(updateTestCommand, cancellationToken);
+            }
+            catch (TestForbiddenException e)
+            {
+                return Forbid(e.Message);
+            }
+            catch (TestNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (TestException e)
+            {
+                return BadRequest(e.Message);
+            }
             return Ok(updatedTest);
         }
-
-        [HttpDelete]
-        public async Task<ActionResult<Test>> Delete(Test test)
+        
+        [HttpDelete, Authorize]
+        public async Task<ActionResult<Test>> Delete(Guid testId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (User.Identity is null)
+            {
+                return Unauthorized();
+            }
+            
+            var userAccount =
+                await _mediator.Send(new GetAccountByLoginQuery(User.Identity.Name), cancellationToken);
+            
+            var deleteTestCommand = new DeleteTestCommand(testId, userAccount.Id);
+            await _mediator.Send(deleteTestCommand, cancellationToken);
+            return NoContent();
         }
     }
 }
