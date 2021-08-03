@@ -41,7 +41,7 @@ namespace ITest.Cqrs.Tests
             {
                 throw new TestForbiddenException("Test with passed id does not belong to your account");
             }
-
+            
             var questionsToUpdate =
                 await _mediator.Send(new GetQuestionsByTestIdQuery(command.TestId), cancellationToken);
 
@@ -68,6 +68,12 @@ namespace ITest.Cqrs.Tests
             }
             
             _mapper.Map(command.TestDto, testToUpdate);
+            testToUpdate.ModifiedDateTime = DateTime.UtcNow;
+            testToUpdate.Questions.ForEach(q =>
+            {
+                q.ModifiedDateTime = DateTime.UtcNow;
+                q.Choices.ForEach(c => c.ModifiedDateTime = DateTime.UtcNow);
+            });
             await _db.SaveChangesAsync(cancellationToken);
             return testToUpdate;
         }
