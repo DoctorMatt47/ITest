@@ -40,6 +40,7 @@ namespace ITest.Controllers
         
 
         [HttpGet]
+        [Route("{query.TestId}")]
         public async Task<ActionResult<Test>> Get(GetTestByIdQuery query, CancellationToken cancellationToken)
         {
             var testToGet = await _mediator.Send(query, cancellationToken);
@@ -79,7 +80,8 @@ namespace ITest.Controllers
         }
 
         [HttpPut, Authorize]
-        public async Task<ActionResult<Test>> Put([FromQuery] Guid id, [FromBody] TestDto dto,
+        [Route("{testId}")]
+        public async Task<ActionResult<Test>> Put(Guid testId, [FromBody] TestDto dto,
             CancellationToken cancellationToken)
         {
             if (User.Identity is null)
@@ -93,7 +95,7 @@ namespace ITest.Controllers
             var updateTestCommand = new UpdateTestCommand
             {
                 AccountId = userAccount.Id,
-                TestId = id,
+                TestId = testId,
                 TestDto = dto
             };
             
@@ -118,6 +120,7 @@ namespace ITest.Controllers
         }
         
         [HttpDelete, Authorize]
+        [Route("{testId}")]
         public async Task<ActionResult<Test>> Delete(Guid testId, CancellationToken cancellationToken)
         {
             if (User.Identity is null)

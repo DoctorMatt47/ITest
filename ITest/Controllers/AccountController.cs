@@ -42,7 +42,8 @@ namespace ITest.Controllers
             return claimsIdentity;
         }
 
-        [HttpPost("/login")]
+        [HttpPost]
+        [Route("login")]
         public async Task<IActionResult> LoginAsync([FromBody] GetAccountByLoginAndPasswordQuery query,
             CancellationToken cancellationToken)
         {
@@ -77,6 +78,7 @@ namespace ITest.Controllers
         }
 
         [HttpPost]
+        [Route("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] AddAccountCommand command,
             CancellationToken cancellationToken)
         {

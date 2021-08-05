@@ -6,7 +6,7 @@ using ITest.Configs.Profiles;
 using ITest.Data;
 using ITest.Data.Dtos.Tests;
 using ITest.Data.Entities.Tests;
-using ITest.Data.Validators;
+using ITest.Validators.Tests;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
