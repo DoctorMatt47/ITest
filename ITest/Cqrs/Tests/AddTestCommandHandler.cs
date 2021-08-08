@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITest.Cqrs.Tests
 {
-    public class AddTestHandler : BaseHandler, IRequestHandler<AddTestCommand, Test>
+    public class AddTestCommandHandler : BaseHandler, IRequestHandler<AddTestCommand, Test>
     {
-        public AddTestHandler(DatabaseContext db) : base(db)
+        public AddTestCommandHandler(DatabaseContext db) : base(db)
         {
         }
 
