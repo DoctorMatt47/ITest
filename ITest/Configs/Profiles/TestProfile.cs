@@ -11,15 +11,9 @@ namespace ITest.Configs.Profiles
     {
         public TestProfile() {
             CreateMap<TestDto, AddTestCommand>();
-            CreateMap<QuestionDto, AddQuestionCommand>();
-            CreateMap<ChoiceDto, AddChoiceCommand>();
             CreateMap<TestDto, AddTestQuestionsChoicesCommand>();
             CreateMap<TestDto, Test>();
-            CreateMap<QuestionDto, Question>();
-            CreateMap<ChoiceDto, Choice>();
             CreateMap<Test, TestDto>();
-            CreateMap<Question, QuestionDto>();
-            CreateMap<Choice, ChoiceDto>();
         }
     }
 }
