@@ -14,8 +14,8 @@ namespace ITest.Cqrs.Accounts
         public GetAccountByLoginQueryHandler(DatabaseContext db) : base(db)
         {
         }
-        
+
         public async Task<Account> Handle(GetAccountByLoginQuery query, CancellationToken cancellationToken) =>
             await _db.Accounts.FirstOrDefaultAsync(acc => acc.Login == query.Login, cancellationToken);
-        }
+    }
 }

@@ -11,26 +11,31 @@ namespace ITest.Cqrs.Accounts
 {
     public class AddAccountHandler : BaseHandler, IRequestHandler<AddAccountCommand, Account>
     {
-        public AddAccountHandler(DatabaseContext db) : base(db)
+        private readonly IMediator _mediator;
+
+        public AddAccountHandler(DatabaseContext db, IMediator mediator) : base(db)
         {
+            _mediator = mediator;
         }
 
         public async Task<Account> Handle(AddAccountCommand command, CancellationToken cancellationToken)
         {
-            var accWithSameLoginOrMail = await _db.Accounts.FirstOrDefaultAsync(acc => 
-                acc.Login == command.Login || acc.Mail == command.Mail,
-                cancellationToken: cancellationToken);
+            var query = new GetAccountByLoginOrMailQuery(command.Login, command.Mail);
+            var accWithSameLoginOrMail = await _mediator.Send(query, cancellationToken);
+
             if (accWithSameLoginOrMail is not null)
             {
                 if (accWithSameLoginOrMail.Login == command.Login)
                 {
                     throw new AccountException("An account with this login already exists");
                 }
+
                 if (accWithSameLoginOrMail.Mail == command.Mail)
                 {
                     throw new AccountException("An account with this mail already exists");
                 }
             }
+
             var newAccount = new Account
             {
                 Login = command.Login,

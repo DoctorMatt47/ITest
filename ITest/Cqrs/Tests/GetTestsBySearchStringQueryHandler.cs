@@ -26,5 +26,5 @@ namespace ITest.Cqrs.Tests
                 .Skip(MaxElementsOnOnePage * query.PagesToSkip)
                 .Take(MaxElementsOnOnePage)
                 .ToListAsync(cancellationToken);
-    }a
+    }
 }

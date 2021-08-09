@@ -10,16 +10,18 @@ namespace ITest.Cqrs.Accounts
     public class GetAccountByLoginAndPasswordQueryHandler : BaseHandler,
         IRequestHandler<GetAccountByLoginAndPasswordQuery, Account>
     {
-        public GetAccountByLoginAndPasswordQueryHandler(DatabaseContext db) : base(db)
+        private readonly IMediator _mediator;
+
+        public GetAccountByLoginAndPasswordQueryHandler(DatabaseContext db, IMediator mediator) : base(db)
         {
+            _mediator = mediator;
         }
 
         public async Task<Account> Handle(GetAccountByLoginAndPasswordQuery query,
-            CancellationToken cancellationToken) =>
-            await _db.Accounts.FirstOrDefaultAsync(
-                acc => 
-                    (acc.Login == query.Login || acc.Mail == query.Login) &&
-                    acc.Password == query.Password,
-                cancellationToken);
+            CancellationToken cancellationToken)
+        {
+            var userAccount = await _mediator.Send(new GetAccountByLoginQuery(query.Login), cancellationToken);
+            return userAccount?.Password == query.Password ? userAccount : null;
+        }
     }
 }
