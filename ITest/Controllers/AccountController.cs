@@ -33,6 +33,7 @@ namespace ITest.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userAccount.Login),
+                new Claim(ClaimTypes.SerialNumber, userAccount.Id.ToString()),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, userAccount.Role.ToString())
             };
             var claimsIdentity = new ClaimsIdentity(
