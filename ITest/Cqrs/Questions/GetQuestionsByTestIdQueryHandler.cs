@@ -10,13 +10,13 @@ using Microsoft.EntityFrameworkCore;
 namespace ITest.Cqrs.Questions
 {
     public class GetQuestionsByTestIdQueryHandler : BaseHandler,
-        IRequestHandler<GetQuestionsByTestIdQuery, ICollection<Question>>
+        IRequestHandler<GetQuestionsByTestIdQuery, IEnumerable<Question>>
     {
         public GetQuestionsByTestIdQueryHandler(DatabaseContext db) : base(db)
         {
         }
 
-        public async Task<ICollection<Question>> Handle(GetQuestionsByTestIdQuery query,
+        public async Task<IEnumerable<Question>> Handle(GetQuestionsByTestIdQuery query,
             CancellationToken cancellationToken) => await _db.Questions
             .Where(question => question.TestId == query.TestId).ToListAsync(cancellationToken);
     }

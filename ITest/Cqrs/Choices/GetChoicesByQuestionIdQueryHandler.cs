@@ -10,13 +10,13 @@ using Microsoft.EntityFrameworkCore;
 namespace ITest.Cqrs.Choices
 {
     public class GetChoicesByQuestionIdQueryHandler : BaseHandler,
-        IRequestHandler<GetChoicesByQuestionIdQuery, ICollection<Choice>>
+        IRequestHandler<GetChoicesByQuestionIdQuery, IEnumerable<Choice>>
     {
         public GetChoicesByQuestionIdQueryHandler(DatabaseContext db) : base(db)
         {
         }
 
-        public async Task<ICollection<Choice>> Handle(GetChoicesByQuestionIdQuery query,
+        public async Task<IEnumerable<Choice>> Handle(GetChoicesByQuestionIdQuery query,
             CancellationToken cancellationToken) => await _db.Choices
             .Where(choice => choice.QuestionId == query.QuestionId)
             .ToListAsync(cancellationToken);

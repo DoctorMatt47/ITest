@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ITest.Cqrs.Tests
 {
-    public class GetTestsBySearchStringQuery : IRequest<ICollection<Test>>
+    public class GetTestsBySearchStringQuery : IRequest<IEnumerable<Test>>
     {
         public GetTestsBySearchStringQuery(string searchString) => SearchString = searchString;
         

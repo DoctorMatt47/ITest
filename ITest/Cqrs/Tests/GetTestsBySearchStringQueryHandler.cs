@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ITest.Cqrs.Tests
 {
     public class GetTestsBySearchStringQueryHandler : BaseHandler,
-        IRequestHandler<GetTestsBySearchStringQuery, ICollection<Test>>
+        IRequestHandler<GetTestsBySearchStringQuery, IEnumerable<Test>>
     {
         private const int MaxElementsOnOnePage = 20;
         
@@ -18,7 +18,7 @@ namespace ITest.Cqrs.Tests
         {
         }
 
-        public async Task<ICollection<Test>> Handle(GetTestsBySearchStringQuery query,
+        public async Task<IEnumerable<Test>> Handle(GetTestsBySearchStringQuery query,
             CancellationToken cancellationToken)
             => await _db.Tests.Where(test => test.Title.Contains(query.SearchString))
                 .Union(_db.Tests.Where(test => test.Description.Contains(query.SearchString)))

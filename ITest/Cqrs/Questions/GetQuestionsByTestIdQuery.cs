@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ITest.Cqrs.Questions
 {
-    public class GetQuestionsByTestIdQuery : IRequest<ICollection<Question>>
+    public class GetQuestionsByTestIdQuery : IRequest<IEnumerable<Question>>
     {
         public GetQuestionsByTestIdQuery(Guid testId) => TestId = testId;
         

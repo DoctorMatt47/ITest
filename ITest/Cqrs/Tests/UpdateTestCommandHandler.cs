@@ -45,7 +45,7 @@ namespace ITest.Cqrs.Tests
             var questionsToUpdate =
                 await _mediator.Send(new GetQuestionsByTestIdQuery(command.TestId), cancellationToken);
 
-            if (questionsToUpdate.Count != command.TestDto.Questions.Count)
+            if (questionsToUpdate.Count() != command.TestDto.Questions.Count)
             {
                 throw new TestException(
                     "Count of questions in passed object not equals to count of questions in stored object"
@@ -59,7 +59,7 @@ namespace ITest.Cqrs.Tests
                     await _mediator.Send(new GetChoicesByQuestionIdQuery(question.Id), cancellationToken);
 
                 if (choicesToUpdate is not null &&
-                    choicesToUpdate.Count != command.TestDto.Questions[i].Choices.Count)
+                    choicesToUpdate.Count() != command.TestDto.Questions[i].Choices.Count)
                 {
                     throw new TestException(
                         "Count of choices in passed object not equals to count of choices in stored object"
