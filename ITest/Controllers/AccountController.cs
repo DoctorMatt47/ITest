@@ -14,6 +14,7 @@ using ITest.Cqrs.Accounts;
 using ITest.Data.Entities.Accounts;
 using ITest.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ITest.Controllers
 {
@@ -95,6 +96,33 @@ namespace ITest.Controllers
             const string domain = "localhost:5001";
             var uriString = $"https://{domain}/test/{newAccount.Id}";
             return Created(new Uri(uriString), newAccount);
+        }
+        
+        [HttpPost, Authorize]
+        [Route("delete")]
+        public async Task<IActionResult> DeleteAsync([FromBody] string password,
+            CancellationToken cancellationToken)
+        {
+            var accountIdClaim = User.FindFirst(ClaimTypes.SerialNumber);
+            if (accountIdClaim is null)
+            {
+                return Unauthorized();
+            }
+
+            var command = new DeleteAccountCommand
+            {
+                AccountId = Guid.Parse(accountIdClaim.Value),
+                Password = password
+            };
+            try
+            {
+               await _mediator.Send(command, cancellationToken);
+            }
+            catch (AccountException e)
+            {
+                return BadRequest(new {errorText = e.Message});
+            }
+            return NoContent();
         }
     }
 }
