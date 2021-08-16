@@ -3,72 +3,85 @@ $lightblue: #27D5ED;
 $light: #B2CFE9;
 $darkblue: #11103F;
 html, body {
-  font-family: 'Comic Neue';
+  font-family: 'Comic Neue', serif;
   font-style: normal;
   font-weight: normal;
-  color:white;
+  color: white;
 }
-a{
+
+a {
   color: black;
 }
-body{
+
+body {
   background-color: $darkblue;
 }
-.bg-skyblue{
+
+.bg-skyblue {
   background-color: $skyblue;
   color: black;
 }
-@media screen and (min-width: 1000px){
-  .nav-position{
+
+@media screen and (min-width: 1000px) {
+  .nav-position {
     position: fixed;
-    top: 0px;
+    top: 0;
     z-index: 100;
   }
 }
-@media screen and (max-width: 1000px){
-  .nav-position{
+
+@media screen and (max-width: 1000px) {
+  .nav-position {
     position: inherit;
-    top: 0px;
+    top: 0;
     z-index: 100;
-    .nav-button{
-      margin: 5px;
-      margin-left: 15px;
+
+    .nav-button {
+      margin: 5px 5px 5px 15px;
     }
   }
 }
-#nav{ 
+
+#nav {
   display: block;
-  .title{
+
+  .title {
     font-size: 28px;
   }
-  .nav-button{
+
+  .nav-button {
     font-size: 18px;
     border-radius: 15px;
     margin-top: 8px;
     padding: 5px;
-    text-align:center;
+    text-align: center;
     background-color: $lightblue;
     color: black;
-    a:hover{
-       color: darkblue;
+
+    a:hover {
+      color: darkblue;
     }
   }
 }
-@media screen and (min-width: 1000px){
-  .sidebar-position{
+
+@media screen and (min-width: 1000px) {
+  .sidebar-position {
     position: sticky;
     top: 88px;
   }
 }
-.left-sidebar{
+
+.left-sidebar {
   margin-top: 2.5em;
   border-radius: 20px;
   background-color: $light;
   color: black;
-  h1, h2, h3, h4, h5{
+
+  h1, h2, h3, h4, h5 {
     text-align: center;
   }
-  .newest-test{
+
+  .newest-test {
     border-radius: 8px;
     padding: 10px;
     margin: 10px;
@@ -77,15 +90,18 @@ body{
     font-size: 18px;
   }
 }
-.right-sidebar{
+
+.right-sidebar {
   margin-top: 2.5em;
   border-radius: 20px;
   background-color: $light;
   color: black;
-  h1, h2, h3, h4, h5{
+
+  h1, h2, h3, h4, h5 {
     text-align: center;
   }
-  .popular-test{
+
+  .popular-test {
     border-radius: 8px;
     padding: 10px;
     margin: 10px;
@@ -94,85 +110,99 @@ body{
     font-size: 18px;
   }
 }
-.main-bar{
+
+.main-bar {
   margin-top: 2.5em;
   border-radius: 20px;
   background-color: $light;
-  color: black; 
+  color: black;
 }
-.search-block{
-    width: 100%;
-    padding: 25px;
-    text-align: center;
-    font-size: 20px;
-    h1{
-      font-size: 50px;
-    }
-    input{
-      border: 0;
-      border-radius: 10px;
-      padding: 10px;
-    }
-    button{
-      font-size: 18px;
-      padding: 5px 10px;
-      margin-top: 12px;
-      border-radius: 5px;
-      color: black;
-      background-color: $lightblue;
-      border-color: darken(
-        $lightblue, 10%);
-    }
-  }
-  .result-test{
-    border-radius: 15px;
-    padding: 10px;
-    padding-bottom: 5px;
-    padding-right: 15px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    background-color:white;
-    p{
-      text-align: left;
-      font-size: 16px;
-    }
-    .test-title{
-      color: $darkblue;
-      text-align: left;
-      font-size: 24px;
-    }
-    .author{
-      text-align:right;
-      color:gray;
-    }
-    .views{
-      margin-top: 5px;
-      font-size: 16px;
-    }
-  }
-.footer{
-  text-align: center;
-  height: 40px;
-}
-.login-menu{
+
+.search-block {
   width: 100%;
   padding: 25px;
   text-align: center;
   font-size: 20px;
-  h1{
+
+  h1 {
+    font-size: 50px;
+  }
+
+  input {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  button {
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-top: 12px;
+    border-radius: 5px;
+    color: black;
+    background-color: $lightblue;
+    border-color: darken(
+                    $lightblue, 10%);
+  }
+}
+
+.result-test {
+  border-radius: 15px;
+  padding: 10px 15px 5px 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  background-color: white;
+
+  p {
+    text-align: left;
+    font-size: 16px;
+  }
+
+  .test-title {
+    color: $darkblue;
+    text-align: left;
+    font-size: 24px;
+  }
+
+  .author {
+    text-align: right;
+    color: gray;
+  }
+
+  .views {
+    margin-top: 5px;
+    font-size: 16px;
+  }
+}
+
+.footer {
+  text-align: center;
+  height: 40px;
+}
+
+.login-menu {
+  width: 100%;
+  padding: 25px;
+  text-align: center;
+  font-size: 20px;
+
+  h1 {
     font-size: 50px;
     margin-bottom: 20px;
   }
-  input{
+
+  input {
     border: 0;
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 10px;
   }
-  label{
+
+  label {
     margin-bottom: 5px;
   }
-  button{
+
+  button {
     font-size: 30px;
     padding: 16px;
     width: 100%;
@@ -181,39 +211,45 @@ body{
     color: black;
     background-color: $lightblue;
     border-color: darken(
-      $lightblue, 10%);
+                    $lightblue, 10%);
   }
-  .service{
+
+  .service {
     padding: 5px;
     margin-top: 20px;
     background-color: $lightblue;
     border: 2px solid darken(
-      $lightblue, 10%
+                    $lightblue, 10%
     );
     border-radius: 10px;
   }
 }
-.signup-menu{
+
+.signup-menu {
   width: 100%;
   padding: 25px;
   font-size: 20px;
-  h1{
+
+  h1 {
     text-align: center;
     font-size: 50px;
     margin-bottom: 20px;
   }
-  input{
+
+  input {
     border: 0;
     border-radius: 10px;
-    padding: 0px;
+    padding: 0;
     margin-bottom: 10px;
   }
-  label{
+
+  label {
     font-size: 16px;
     text-align: left;
     margin-bottom: 5px;
   }
-  button{
+
+  button {
     font-size: 30px;
     padding: 16px;
     width: 100%;
@@ -222,69 +258,81 @@ body{
     color: black;
     background-color: $lightblue;
     border-color: darken(
-      $lightblue, 10%);
+                    $lightblue, 10%);
   }
-  .service{
+
+  .service {
     padding: 5px;
     margin-top: 20px;
     background-color: $lightblue;
     border: 2px solid darken(
-      $lightblue, 10%
+                    $lightblue, 10%
     );
     border-radius: 10px;
   }
 }
-.message{
+
+.message {
   width: 100%;
-  padding: 25px;
-  padding-top: 35px;
+  padding: 35px 25px 25px;
   font-size: 20px;
   text-align: center;
-  h1{
+
+  h1 {
     margin-bottom: 15px;
   }
 }
-.creator{
+
+.creator {
   width: 100%;
   padding: 25px;
   font-size: 20px;
-  h1,h2,h3,h4,h5,h6{
+
+  h1, h2, h3, h4, h5, h6 {
     text-align: center;
     margin-bottom: 10px;
   }
-  input{
+
+  input {
     margin-bottom: 15px;
   }
+
   textarea {
     resize: none;
   }
-  .question{
+
+  .question {
     padding: 10px;
     border-radius: 8px;
     background-color: white;
   }
 }
-.profile{
+
+.profile {
   width: 100%;
   padding: 25px;
   font-size: 20px;
-  h1,h2,h3,h4,h5,h6{
+
+  h1, h2, h3, h4, h5, h6 {
     text-align: center;
     margin-bottom: 10px;
   }
-  .icon{
+
+  .icon {
     border-radius: 8px;
     width: 230px;
     height: 230px;
   }
-  .nickname{
+
+  .nickname {
     padding: 8px;
     border-radius: 8px;
     background-color: white;
     font-size: 25px;
     margin: 0 10px 0 10px;
   }
-  .city{
+
+  .city {
     padding: 4px;
     font-size: 22px;
   }
