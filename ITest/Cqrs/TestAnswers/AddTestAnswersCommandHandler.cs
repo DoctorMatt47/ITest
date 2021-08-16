@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.Internal;
 using ITest.Cqrs.Accounts;
 using ITest.Cqrs.Tests;
 using ITest.Data;
@@ -34,16 +36,18 @@ namespace ITest.Cqrs.TestAnswers
             var getTestQuery = new GetTestQuestionsChoicesByTestIdQuery(command.TestId);
             var testToAnswer = await _mediator.Send(getTestQuery, cancellationToken);
 
-            TestAnswersValidate(testToAnswer, command.TestAnswerDtos);
+            var fixedTestAnswers = 
+                TestAnswersFixAndValidate(testToAnswer, command.TestAnswerDtos);
 
             var testAnswers =
-                command.TestAnswerDtos.Select(dto => _mapper.Map<TestAnswer>(dto)).ToList();
+                fixedTestAnswers.Select(dto => _mapper.Map<TestAnswer>(dto)).ToList();
 
             await _db.TestAnswers.AddRangeAsync(testAnswers, cancellationToken);
             return testAnswers;
         }
 
-        private static void TestAnswersValidate(Test testToAnswer, IEnumerable<TestAnswerDto> testAnswerDtos)
+        private static IEnumerable<TestAnswerDto> TestAnswersFixAndValidate(Test testToAnswer,
+            IEnumerable<TestAnswerDto> testAnswerDtos)
         {
             if (testToAnswer is null)
             {
@@ -60,6 +64,7 @@ namespace ITest.Cqrs.TestAnswers
                 throw new TestAnswerException("One of the test answers consists of an invalid question id");
             }
 
+            var fixedTestAnswers = new List<TestAnswerDto>();
             foreach (var question in testToAnswer.Questions)
             {
                 var choicesIds = question.Choices.Select(c => c.Id);
@@ -76,70 +81,109 @@ namespace ITest.Cqrs.TestAnswers
                     throw new TestAnswerException(msg);
                 }
 
-                QuestionAnswersValidate(question.QuestionType, questionAnswers);
+                var fixedQuestionAnswers =
+                    QuestionAnswersFixAndValidate(question.QuestionType, questionAnswers);
+                fixedTestAnswers.AddRange(fixedQuestionAnswers);
             }
+
+            return fixedTestAnswers;
         }
 
-        private static void QuestionAnswersValidate(QuestionType questionType,
-            ICollection<TestAnswerDto> testAnswers)
+        private static IEnumerable<TestAnswerDto> QuestionAnswersFixAndValidate(QuestionType questionType,
+            IEnumerable<TestAnswerDto> testAnswers)
         {
-            var answersCount = testAnswers.Count;
             switch (questionType)
             {
                 case QuestionType.Text:
-                {
-                    if (answersCount < 1)
-                    {
-                        const string msg = "One of the test answers does not answer on text type question";
-                        throw new TestAnswerException(msg);
-                    }
+                    return TextQuestionTypeAnswersFixAndValidate(testAnswers);
 
-                    if (answersCount > 1)
-                    {
-                        const string msg = "Text type question has more than one answer";
-                        throw new TestAnswerException(msg);
-                    }
-
-                    if (testAnswers.First().Answer is null)
-                    {
-                        const string msg = "Text type question has not answer string";
-                        throw new TestAnswerException(msg);
-                    }
-
-                    break;
-                }
                 case QuestionType.SingleChoice:
-                {
-                    if (answersCount != 1)
-                    {
-                        const string msg = "One of the test answers does not answer on single choice type question";
-                        throw new TestAnswerException(msg);
-                    }
+                    return SingleChoiceQuestionTypeAnswersFixAndValidate(testAnswers);
 
-                    if (testAnswers.First().Answer is not null)
-                    {
-                        const string msg = "Single choice type question has answer with not null answer string";
-                        throw new TestAnswerException(msg);
-                    }
-
-                    break;
-                }
                 case QuestionType.MultipleChoice:
-                {
-                    if (testAnswers.First().Answer is not null)
-                    {
-                        const string msg = "Single choice type question has answer with not null answer string";
-                        throw new TestAnswerException(msg);
-                    }
-
-                    break;
-                }
+                    return MultipleChoiceQuestionTypeAnswersFixAndValidate(testAnswers);
+                
                 default:
-                {
                     const string msg = "This type of question was not handled";
                     throw new ArgumentOutOfRangeException(nameof(questionType), msg);
-                }
             }
+        }
+
+        private static IEnumerable<TestAnswerDto> TextQuestionTypeAnswersFixAndValidate(
+            IEnumerable<TestAnswerDto> testAnswersEnumerable)
+        {
+            var testAnswers = testAnswersEnumerable.ToList();
+            var answersCount = testAnswers.Count;
+            if (answersCount < 1)
+            {
+                var msg = $"{nameof(QuestionType.SingleChoice)} type question" +
+                          $" has not been answered";
+                throw new TestAnswerException(msg);
+            }
+
+            if (answersCount > 1)
+            {
+                var msg = $"{nameof(QuestionType.SingleChoice)} type question" +
+                          $" has been answered more than once";
+                throw new TestAnswerException(msg);
+            }
+
+            var hasNotChoiceIdMsg = $"{nameof(QuestionType.SingleChoice)} type question has not choice id";
+            var singleAnswer = testAnswers.First();
+            var newTestDto = new TestAnswerDto
+            {
+                Answer = null,
+                ChoiceId = singleAnswer.ChoiceId ?? throw new TestAnswerException(hasNotChoiceIdMsg),
+                QuestionId = singleAnswer.QuestionId
+            };
+            return new List<TestAnswerDto> {newTestDto};
+        }
+
+        private static IEnumerable<TestAnswerDto> SingleChoiceQuestionTypeAnswersFixAndValidate(
+            IEnumerable<TestAnswerDto> testAnswersEnumerable)
+        {
+            var testAnswers = testAnswersEnumerable.ToList();
+            var answersCount = testAnswers.Count;
+            if (answersCount < 1)
+            {
+                var msg = $"{nameof(QuestionType.SingleChoice)} type question" +
+                          $" has not been answered";
+                throw new TestAnswerException(msg);
+            }
+
+            if (answersCount > 1)
+            {
+                var msg = $"{nameof(QuestionType.SingleChoice)} type question" +
+                          $" has been answered more than once";
+                throw new TestAnswerException(msg);
+            }
+
+            var hasNotChoiceIdMsg = $"{nameof(QuestionType.SingleChoice)} type question has not choice id";
+            var singleAnswer = testAnswers.First();
+            var newTestDto = new TestAnswerDto
+            {
+                Answer = null,
+                ChoiceId = singleAnswer.ChoiceId ?? throw new TestAnswerException(hasNotChoiceIdMsg),
+                QuestionId = singleAnswer.QuestionId
+            };
+            return new List<TestAnswerDto> {newTestDto};
+        }
+
+        private static IEnumerable<TestAnswerDto> MultipleChoiceQuestionTypeAnswersFixAndValidate(
+            IEnumerable<TestAnswerDto> testAnswersEnumerable)
+        {
+            var distinctTestAnswers = testAnswersEnumerable
+                .Where(ans => ans.ChoiceId is not null)
+                .GroupBy(ans => ans.ChoiceId)
+                .Select(group => group.First())
+                .Select(ans => new TestAnswerDto
+                {
+                    Answer = null,
+                    ChoiceId = ans.ChoiceId,
+                    QuestionId = ans.QuestionId
+                });
+            
+            return distinctTestAnswers.ToList();
         }
     }
 }
