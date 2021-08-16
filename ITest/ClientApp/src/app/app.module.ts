@@ -12,7 +12,7 @@ import { SignUpComponent } from '../signup/signup.component';
 import { NotFoundComponent } from '../notfound/notfound.component';
 
 const appRoutes: Routes =[
-    { path: '', component: AppComponent},
+    { path: '', redirectTo: "search", pathMatch: "full"},
     { path: 'search', component: SearchComponent},
     { path: 'creator', component: CreatorComponent},
     { path: 'test', component: TestComponent},
@@ -23,7 +23,10 @@ const appRoutes: Routes =[
 
 @NgModule({
     imports: [BrowserModule, FormsModule, RouterModule.forRoot(appRoutes)],
-    declarations: [AppComponent, SearchComponent, CreatorComponent],
+    declarations: [
+        AppComponent, SearchComponent, CreatorComponent, TestComponent, 
+        LoginComponent, SignUpComponent, NotFoundComponent
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
