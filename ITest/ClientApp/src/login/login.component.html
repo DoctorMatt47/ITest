@@ -1,47 +1,51 @@
 <div class="container">
-    <div class="row">
-        <div class="col-lg"></div>
-        <div class="col-lg-6">
-            <div class="main-bar login-menu">
-                <span class="display-4">Login</span>
-                <form action="">
-                    <div class="form-group">
-                        <label for="">Username or email</label>
-                        <input type="email" class="form-control" name="" id="" aria-describedby="emailHelpId"
-                            placeholder="" required>
-                        <label for="">Password</label>
-                        <input type="password" class="form-control" name="" id="" placeholder="" required>
-                        <div class="row">
-                            <div class="col">
-                                <a href="">
-                                    <div class="service">
-                                        <i class="fab fa-google"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a href="">
-                                    <div class="service">
-                                        <i class="fab fa-facebook"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col">
-                                <a href="">
-                                    <div class="service">
-                                        <i class="fab fa-twitter"></i>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Login</button>
-                        <div class="mt-3">
-                            <a href="signup.html">Don't have an account? Sign up</a>
-                        </div>
-                    </div>
-                </form>
+  <div class="row">
+    <div class="col-lg"></div>
+    <div class="col-lg-6">
+      <div class="main-bar login-menu">
+        <span class="display-4">Login</span>
+        <form action="">
+          <div class="form-group">
+            <label for="email">Username or email</label>
+            <input type="email" class="form-control" id="email"
+                   aria-describedby="emailHelpId" [(ngModel)]="loginOrEmail">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password"
+                   [(ngModel)]="password">
+            <div *ngIf="errorMessage.length != 0" class="text-danger">
+              {{errorMessage}}
             </div>
-        </div>
-        <div class="col-lg"></div>
+            <div class="row">
+              <div class="col">
+                <a href="">
+                  <div class="service">
+                    <i class="fab fa-google"></i>
+                  </div>
+                </a>
+              </div>
+              <div class="col">
+                <a href="">
+                  <div class="service">
+                    <i class="fab fa-facebook"></i>
+                  </div>
+                </a>
+              </div>
+              <div class="col">
+                <a href="">
+                  <div class="service">
+                    <i class="fab fa-twitter"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" (click)="login()">Login</button>
+            <div class="mt-3">
+              <a routerLink="signup">Don't have an account? Sign up</a>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
+    <div class="col-lg"></div>
+  </div>
 </div>
