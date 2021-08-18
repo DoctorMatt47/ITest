@@ -31,6 +31,8 @@ namespace ITest.Controllers
             return searchedTests;
         }
 
+        [HttpGet]
+        [Route("pages-count/{query.SearchString}")]
         public async Task<int> GetPagesCount(GetTestCountBySearchStringQuery query,
             CancellationToken cancellationToken)
         {
