@@ -22,7 +22,7 @@ body {
   color: black;
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 991px) {
   .nav-position {
     position: fixed;
     top: 0;
@@ -30,7 +30,7 @@ body {
   }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 991px) {
   .nav-position {
     position: inherit;
     top: 0;
@@ -64,7 +64,7 @@ body {
   }
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 991px) {
   .sidebar-position {
     position: sticky;
     top: 88px;
