@@ -52,7 +52,7 @@ namespace ITest.Controllers
             var identity = await GetIdentityAsync(query, cancellationToken);
             if (identity == null)
             {
-                return BadRequest(new {errorText = "Invalid username or password."});
+                return BadRequest(new {message = "Invalid username or password."});
             }
 
             var now = DateTime.UtcNow;
@@ -72,11 +72,11 @@ namespace ITest.Controllers
 
             var response = new
             {
-                access_token = encodedJwt,
+                jwtToken = encodedJwt,
                 username = identity.Name
             };
 
-            return Json(response);
+            return Ok(response);
         }
 
         [HttpPost]
@@ -98,7 +98,7 @@ namespace ITest.Controllers
             return Created(new Uri(uriString), newAccount);
         }
         
-        [HttpPost, Authorize]
+        [HttpDelete, Authorize]
         [Route("delete")]
         public async Task<IActionResult> DeleteAsync([FromBody] string password,
             CancellationToken cancellationToken)
