@@ -10,7 +10,7 @@ namespace ITest.Data.Entities.Tests
         public string ChoiceString { get; set; }
 
         public Guid QuestionId { get; set; }
-        public Question Question { get; set; } = default!;
+        public Question Question { get; set; }
         
         public List<TestAnswer> TestAnswers { get; set; } = new List<TestAnswer>();
     }

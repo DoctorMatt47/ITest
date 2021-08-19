@@ -12,7 +12,7 @@ namespace ITest.Data.Entities.Tests
         public QuestionType QuestionType { get; set; }
 
         public Guid TestId { get; set; }
-        public Test Test { get; set; } = default!;
+        public Test Test { get; set; }
         
         public List<Choice> Choices { get; set; } = new List<Choice>();
         public List<TestAnswer> TestAnswers { get; set; } = new List<TestAnswer>();
