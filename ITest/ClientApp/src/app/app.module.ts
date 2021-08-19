@@ -9,7 +9,7 @@ import {CreatorComponent} from '../creator/creator.component';
 import {TestComponent} from '../test/test.component';
 import {LoginComponent} from '../login/login.component';
 import {SignUpComponent} from '../signup/signup.component';
-import {NotFoundComponent} from '../notfound/notfound.component';
+import {NotFoundComponent} from '../not-found/not-found.component';
 import {HttpClientModule} from "@angular/common/http";
 import {CookieService} from 'ngx-cookie-service';
 

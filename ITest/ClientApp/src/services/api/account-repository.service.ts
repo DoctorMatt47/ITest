@@ -1,9 +1,9 @@
 ﻿import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Account} from "../../models/accounts/account";``
+import {Account} from "../../models/accounts/account.model";
 
 @Injectable()
-export class AccountService {
+export class AccountRepositoryService {
     private readonly _url = "/api/accounts";
 
     constructor(private _http: HttpClient) {

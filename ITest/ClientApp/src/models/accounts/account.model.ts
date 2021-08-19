@@ -1,5 +1,5 @@
-﻿import {BaseModel} from "../basemodel";
-import {AccountRole} from "./accountrole";
+﻿import {BaseModel} from "../base.model";
+import {AccountRole} from "./account-role.enum";
 
 export class Account extends BaseModel {
     public login? : string;

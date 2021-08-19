@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {AccountService} from "../services/api/account.service";
-import {Account} from "../models/accounts/account";
+import {AccountRepositoryService} from "../services/api/account-repository.service";
+import {Account} from "../models/accounts/account.model";
 import {Observer} from "rxjs";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
     selector: 'signup',
     templateUrl: './signup.component.html',
     styleUrls: [],
-    providers: [AccountService]
+    providers: [AccountRepositoryService]
 })
 export class SignUpComponent {
     account: Account = new Account();
@@ -17,7 +17,7 @@ export class SignUpComponent {
     loginPath: string = "/login"
 
     constructor(
-        private _accounts: AccountService,
+        private _accounts: AccountRepositoryService,
         private _router: Router) {
     }
 
