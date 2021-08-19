@@ -1,37 +1,37 @@
 import {Component} from '@angular/core';
-import {AccountService} from "../services/api/account.service";
-import {TokenService} from "../services/tokens/token.service";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {AccountRepositoryService} from '../services/api/account-repository.service';
+import {TokenService} from '../services/tokens/token.service';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
-import {Observer} from "rxjs";
-import {Router} from "@angular/router";
+import {Observer} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'login',
     templateUrl: './login.component.html',
     styleUrls: [],
-    providers: [AccountService, HttpClient, TokenService, CookieService]
+    providers: [AccountRepositoryService, HttpClient, TokenService, CookieService]
 })
 export class LoginComponent {
-    loginOrEmail: string = "";
-    password: string = "";
-    errorMessage: string = ""
-    continueRoot: string = "/search";
+    loginOrEmail: string = '';
+    password: string = '';
+    errorMessage: string = ''
 
     constructor(
-        private _accounts: AccountService,
+        private _accounts: AccountRepositoryService,
         private _token: TokenService,
+        private _route: ActivatedRoute,
         private _router: Router
     ) {
     }
 
     login(): void {
-        if (this.loginOrEmail == "") {
-            this.errorMessage = "Enter your username or email";
+        if (this.loginOrEmail == '') {
+            this.errorMessage = 'Enter your username or email';
             return;
         }
-        if (this.password == "") {
-            this.errorMessage = "Enter your password";
+        if (this.password == '') {
+            this.errorMessage = 'Enter your password';
             return;
         }
         let observer: Observer<any> = {
@@ -45,7 +45,7 @@ export class LoginComponent {
             },
             complete: () => {
                 this.errorMessage = "";
-                this._router.navigate([this.continueRoot]);
+                this.navigateToPreviousPage();
             }
         }
         this._accounts.login(this.loginOrEmail, this.password)
@@ -60,5 +60,10 @@ export class LoginComponent {
 
     private jwtTokenSave(jwtToken: string): void {
         this._token.jwtToken = jwtToken;
+    }
+
+    private navigateToPreviousPage(): void {
+        const redirect = window.history.state.redirect ?? 'search';
+        this._router.navigate([redirect]);
     }
 }
