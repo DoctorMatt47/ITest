@@ -6,4 +6,5 @@
     styleUrls: []
 })
 export class AppComponent {
+    isLoggedIn: boolean = false;
 }

@@ -19,21 +19,24 @@
             </div>
             <div class="col-lg pl-3 pr-0">
               <div class="nav-button">
-                <a routerLink="creator" style="white-space: nowrap;">
+                <a routerLink="/creator" style="white-space: nowrap;">
                   Create test
                 </a>
               </div>
             </div>
             <div class="col-lg pl-3 pr-0">
               <div class="nav-button">
-                <a routerLink="search">
+                <a routerLink="/search">
                   Search
                 </a>
               </div>
             </div>
             <div class="col-lg pl-3 pr-0">
               <div class="nav-button">
-                <a routerLink="login">
+                <a *ngIf="isLoggedIn" routerLink="/logout">
+                  Logout
+                </a>
+                <a *ngIf="!isLoggedIn" routerLink="/login">
                   Login
                 </a>
               </div>
