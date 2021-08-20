@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using ITest.Data.Dtos.Tests;
+using ITest.Data.Entities.Tests;
 
 namespace ITest.Validators.Tests
 {
@@ -12,9 +13,14 @@ namespace ITest.Validators.Tests
 
             RuleFor(q => q.QuestionType)
                 .IsInEnum();
+            
+            RuleFor(q => q.Choices)
+                .Must(l => l.Count == 0)
+                .When(q => q.QuestionType == QuestionType.Text);
 
             RuleFor(q => q.Choices)
-                .Must(l => l.Count < 50);
+                .Must(l => l.Count <= 50)
+                .When(q => q.QuestionType != QuestionType.Text);
 
             RuleForEach(q => q.Choices)
                 .SetValidator(new ChoiceValidator());
