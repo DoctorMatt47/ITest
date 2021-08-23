@@ -56,6 +56,9 @@ namespace ITest
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new TestProfile());
+                mc.AddProfile(new QuestionProfile());
+                mc.AddProfile(new ChoiceProfile());
+                mc.AddProfile(new TestAnswerProfile());
             });
 
             services.AddSingleton(mapperConfig.CreateMapper());
