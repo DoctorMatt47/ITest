@@ -1,33 +1,39 @@
 ﻿<div class="container">
   <div class="row">
-    <div class="main-bar creator">
+    <div class="main-bar test-preview">
       <span class="display-4 d-flex justify-content-center">Test</span>
-      <form>
-        <label>
-          Test title:
-          <input type="text" class="form-control" name="test-title" readonly>
-        </label>
-        <label>
-          Short description:
-          <textarea maxlength="200" rows="4" readonly class="form-control mb-4" name="short-description"></textarea>
-        </label>
-        <div *ngIf="false" class="row">
-          <div class="col">
-            <button type="button" class="btn btn-danger">Delete</button>
-          </div>
-          <div class="col">
-            <button type="button" class="btn btn-secondary">Update</button>
-          </div>
+      <label for="title">Title:</label>
+      <input type="text" class="form-control"
+             name="test-title" id="title"
+             [(ngModel)]="test.title" readonly>
+      <label for="description">Description:</label>
+      <textarea class="form-control mb-4"
+                name="description" id="description"
+                [(ngModel)]="test.description" readonly>
+      </textarea>
+      <div class="row">
+        <div class="col">
+          Count of questions: {{countOfQuestions}}
         </div>
-        <div *ngIf="true" class="row">
-          <div class="col">
-            <button type="button" class="btn btn-primary">Pass the test</button>
-          </div>
+        <div class="col d-flex justify-content-end">
+          Count of views: {{test.visitorsCount}}
         </div>
-        <div class="d-flex justify-content-center">
-          <button type="submit" class="btn btn-primary btn-block btn-lg mt-4">Submit</button>
+      </div>
+      <div *ngIf="!isYourTest" class="row mt-3">
+        <div class="col">
+          <button (click)="passTest()" type="button" class="btn btn-primary">
+            Pass the test
+          </button>
         </div>
-      </form>
+      </div>
+      <div *ngIf="isYourTest" class="row mt-3">
+        <div class="col">
+          <button type="button" class="btn btn-primary">Update</button>
+        </div>
+        <div class="col d-flex justify-content-end">
+          <button type="button" class="btn btn-danger">Remove</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
