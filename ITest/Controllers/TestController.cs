@@ -37,20 +37,52 @@ namespace ITest.Controllers
             _testValidator = testValidator;
             _mapper = mapper;
         }
-        
+
 
         [HttpGet]
-        [Route("{query.TestId}")]
-        public async Task<ActionResult<Test>> Get(GetTestByIdQuery query, CancellationToken cancellationToken)
+        [Route("preview/{testId}")]
+        public async Task<ActionResult<Test>> GetPreview(string testId,
+            CancellationToken cancellationToken)
         {
+            if (!Guid.TryParse(testId, out var testIdGuid))
+            {
+                return BadRequest("Test id is incorrect");
+            }
+
+            var query = new GetTestByIdQuery(testIdGuid);
             var testToGet = await _mediator.Send(query, cancellationToken);
             if (testToGet is null)
+            {
                 return NotFound();
+            }
+
             return Ok(testToGet);
+        }
+        
+        [HttpGet]
+        [Route("{testId}")]
+        public async Task<ActionResult<Test>> Get(string testId,
+            CancellationToken cancellationToken)
+        {
+            if (!Guid.TryParse(testId, out var testIdGuid))
+            {
+                return BadRequest("Test id is incorrect");
+            }
+
+            var query = new GetTestQuestionsChoicesByTestIdQuery(testIdGuid);
+            var testToGet = await _mediator.Send(query, cancellationToken);
+            if (testToGet is null)
+            {
+                return NotFound();
+            }
+
+            var testToGetDto = _mapper.Map<TestDto>(testToGet);
+            return Ok(testToGetDto);
         }
 
         [HttpPost, Authorize]
-        public async Task<ActionResult<Test>> Post([FromBody] TestDto dto, CancellationToken cancellationToken)
+        public async Task<ActionResult> Post([FromBody] TestDto dto,
+            CancellationToken cancellationToken)
         {
             if (User.Identity is null)
             {
@@ -76,7 +108,7 @@ namespace ITest.Controllers
 
             const string domain = "localhost:5001";
             var uriString = $"https://{domain}/test/{createdTest.Id}";
-            return Created(new Uri(uriString), new {createdTest.Id, createdTestDto});
+            return Created(new Uri(uriString), createdTest.Id);
         }
 
         [HttpPut, Authorize]
@@ -88,17 +120,17 @@ namespace ITest.Controllers
             {
                 return Unauthorized();
             }
-            
+
             var userAccount =
                 await _mediator.Send(new GetAccountByLoginQuery(User.Identity.Name), cancellationToken);
-            
+
             var updateTestCommand = new UpdateTestCommand
             {
                 AccountId = userAccount.Id,
                 TestId = testId,
                 TestDto = dto
             };
-            
+
             Test updatedTest;
             try
             {
@@ -116,9 +148,10 @@ namespace ITest.Controllers
             {
                 return BadRequest(e.Message);
             }
+
             return Ok(updatedTest);
         }
-        
+
         [HttpDelete, Authorize]
         [Route("{testId}")]
         public async Task<ActionResult<Test>> Delete(Guid testId, CancellationToken cancellationToken)
@@ -127,10 +160,10 @@ namespace ITest.Controllers
             {
                 return Unauthorized();
             }
-            
+
             var userAccount =
                 await _mediator.Send(new GetAccountByLoginQuery(User.Identity.Name), cancellationToken);
-            
+
             var deleteTestCommand = new DeleteTestCommand(testId, userAccount.Id);
             await _mediator.Send(deleteTestCommand, cancellationToken);
             return NoContent();
