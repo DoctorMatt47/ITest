@@ -1,32 +1,82 @@
 <div class="container">
-    <div class="row">
-        <div class="main-bar creator">
-            <span class="display-4 d-flex justify-content-center">Creator</span>
-            <form>
-                <label for="test-title">Test title:</label>
-                <input type="text" class="form-control" name="test-title">
-                <label for="short-description">Short description:</label>
-                <textarea maxlength="200" rows="4" class="form-control mb-4" name="short-description"></textarea>
-                <div class="question mt-4">
-                    <label for="test-type">Question type:</label>
-                    <select class="form-control mb-3" name="test-type">
-                        <option>Single choice</option>
-                        <option>Multiple choice</option>
-                        <option>Text</option>
-                    </select>
-                    <label for="question">Question:</label>
-                    <input type="text" class="form-control" name="test-question">
-                    <label for="question">Answers:</label>
-                    <input type="text" class="form-control" name="test-question">
-                    <button type="submit" class="btn btn-info">Add answer</button>
+  <div class="row">
+    <div class="main-bar creator">
+      <span class="display-4 d-flex justify-content-center">Creator</span>
+      <form>
+        <label for="test-title">Test title:</label>
+        <input type="text" class="form-control"
+               id="test-title" name="test-title"
+               [(ngModel)]="test.title">
+        <label for="test-description">Description:</label>
+        <textarea maxlength="200" rows="4" class="form-control mb-1"
+                  id="test-description" name="test-description"
+                  [(ngModel)]="test.description">
+                </textarea>
+        <div *ngFor="let question of this.test.questions; index as i">
+          <div class="question mt-4">
+            <label [for]="'question-type-'+i">Question type:</label>
+            <select class="form-control mb-3"
+                    [id]="'question-type-'+i" name="question-type"
+                    (change)="onSelectQuestionTypeChange($event, question)">
+              <option value="1">Single choice</option>
+              <option value="2">Multiple choice</option>
+              <option value="3" selected>Text</option>
+            </select>
+            <label [for]="'question-'+i">Question:</label>
+            <input type="text" class="form-control"
+                   [id]="'question-'+i" [name]="'question-'+i"
+                   [(ngModel)]="question.questionString">
+            <label *ngIf="question.questionType!=3">
+              Choices:
+            </label>
+            <div *ngFor="let choice of question.choices; index as j">
+              <div class="row">
+                <div class="col pr-0">
+                  <input type="text" class="form-control"
+                         [id]="'question-'+i+'-choice-'+j"
+                         [name]="'question-'+i+'-choice-'+j"
+                         [(ngModel)]="choice.choiceString">
                 </div>
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-info btn-block btn-lg mt-4">Add question</button>
+                <div class="col-1 pl-0 d-flex justify-content-end align-items-start">
+                  <button *ngIf="question.questionType!=3 
+                              && question.choices.length > 1"
+                          (click)="removeChoice(question, j)"
+                          type="button" class="btn btn-sm btn-danger mt-1">
+                    Remove
+                  </button>
                 </div>
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg mt-4">Create/Change</button>
-                </div>
-            </form>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <button *ngIf="question.questionType!=3"
+                        (click)="addChoice(question)"
+                        type="button" class="btn btn-info">
+                  Add choice
+                </button>
+              </div>
+              <div class="col d-flex justify-content-end">
+                <button (click)="removeQuestion(i)"
+                        type="button" class="btn btn-danger">
+                  Remove question
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="d-flex justify-content-end">
+          <button (click)="addQuestion()" type="button"
+                  class="btn btn-info btn-block btn-lg mt-4">
+            Add question
+          </button>
+        </div>
+        <div class="d-flex justify-content-center">
+          <button (click)="createTest()" type="submit"
+                  class="btn btn-primary btn-block btn-lg mt-4">
+            Create/Change
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
