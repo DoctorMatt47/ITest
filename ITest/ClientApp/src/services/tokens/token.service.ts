@@ -7,6 +7,10 @@ export class TokenService {
         private _cookie: CookieService
     ) {
     }
+    
+    isJwtTokenExists() {
+        return this._cookie.check("ITest_jwtToken");
+    }
 
     get jwtToken(): string {
         return this._cookie.get("ITest_jwtToken");
