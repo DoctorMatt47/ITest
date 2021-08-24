@@ -7,16 +7,10 @@ using MediatR;
 
 namespace ITest.Cqrs.Tests
 {
-    public class DeleteTestCommand : IRequest<Unit>
+    public class DeleteTestCommand : IRequest
     {
-        public DeleteTestCommand(Guid testId, Guid accountId)
-        {
-            TestId = testId;
-            AccountId = accountId;
-        }
-
-        public Guid TestId { get; }
-        public Guid AccountId { get; }
+        public Guid TestId { get; set; }
+        public Guid AccountId { get; set; }
     }
     
     public class DeleteTestCommandHandler : BaseHandler, IRequestHandler<DeleteTestCommand>
