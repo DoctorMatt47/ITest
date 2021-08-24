@@ -8,13 +8,13 @@ namespace ITest.Cqrs.Accounts
 {
     public class GetAccountByLoginAndPasswordQuery : IRequest<Account>
     {
-        public GetAccountByLoginAndPasswordQuery(string login, string password)
+        public GetAccountByLoginAndPasswordQuery(string loginOrEmail, string password)
         {
-            Login = login;
+            LoginOrEmail = loginOrEmail;
             Password = password;
         }
 
-        public string Login { get; set; }
+        public string LoginOrEmail { get; set; }
         public string Password { get; set; }
     }
 
@@ -31,7 +31,9 @@ namespace ITest.Cqrs.Accounts
         public async Task<Account> Handle(GetAccountByLoginAndPasswordQuery query,
             CancellationToken cancellationToken)
         {
-            var userAccount = await _mediator.Send(new GetAccountByLoginQuery(query.Login), cancellationToken);
+            var userAccount = await _mediator.Send(
+                new GetAccountByLoginQuery(query.LoginOrEmail),
+                cancellationToken);
             return userAccount?.Password == query.Password ? userAccount : null;
         }
     }
