@@ -23,22 +23,29 @@ namespace ITest.Controllers
         }
 
         [HttpGet]
-        [Route("{query.PagesToSkip}/{query.SearchString}")]
-        public async Task<IEnumerable<Test>> GetBySearchString(GetTestsBySearchStringQuery query,
+        [Route("{searchString}/{pagesToSkip}")]
+        public async Task<ActionResult<IEnumerable<Test>>> GetBySearchString(int pagesToSkip, string searchString,
             CancellationToken cancellationToken)
         {
-            var searchedTests = await _mediator.Send(query, cancellationToken);
-            return searchedTests;
+            var getTestsBySearchStringQuery = new GetTestsBySearchStringQuery
+            {
+                PagesToSkip = pagesToSkip,
+                SearchString = searchString
+            };
+            var searchedTests =
+                await _mediator.Send(getTestsBySearchStringQuery, cancellationToken);
+            return Ok(searchedTests);
         }
 
         [HttpGet]
-        [Route("pages-count/{query.SearchString}")]
-        public async Task<int> GetPagesCount(GetTestCountBySearchStringQuery query,
+        [Route("{query.SearchString}/pages-count")]
+        public async Task<ActionResult<int>> GetPagesCount(string searchString,
             CancellationToken cancellationToken)
         {
-            var testCount = await _mediator.Send(query, cancellationToken);
-            var a = (double) testCount / MaxElementsOnOnePage;
-            return (int) Math.Ceiling(a);
+            var getTestCountBySearchStringQuery = new GetTestCountBySearchStringQuery(searchString);
+            var testCount = await _mediator.Send(getTestCountBySearchStringQuery, cancellationToken);
+            var pagesCount = Math.Ceiling((double) testCount / MaxElementsOnOnePage);
+            return Ok((int) pagesCount);
         }
     }
 }

@@ -1,18 +1,15 @@
-﻿using ITest.Configs;
-using ITest.Data;
+﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using ITest.Cqrs.Accounts;
+using ITest.Data.Dtos.Requests.Accounts;
+using ITest.Data.Dtos.Responses.Accounts;
 using ITest.Data.Entities.Accounts;
-using ITest.Exceptions;
+using ITest.Exceptions.Cqrs;
+using ITest.Extensions;
+using ITest.Services.Tokens;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 
@@ -23,105 +20,82 @@ namespace ITest.Controllers
     public class AccountController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+        private readonly ITokenService _token;
 
-        public AccountController(IMediator mediator) => _mediator = mediator;
-
-        private async Task<ClaimsIdentity> GetIdentityAsync(GetAccountByLoginAndPasswordQuery query,
-            CancellationToken cancellationToken)
+        public AccountController(
+            IMediator mediator,
+            ITokenService token,
+            IMapper mapper)
         {
-            var userAccount = await _mediator.Send(query, cancellationToken);
-            if (userAccount == null) return null;
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userAccount.Login),
-                new Claim(ClaimTypes.SerialNumber, userAccount.Id.ToString()),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, userAccount.Role.ToString())
-            };
-            var claimsIdentity = new ClaimsIdentity(
-                claims, "Token", 
-                ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
-            return claimsIdentity;
+            _token = token;
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> LoginAsync([FromBody] GetAccountByLoginAndPasswordQuery query,
+        public async Task<ActionResult<LoginAccountRequest>> Login([FromBody] LoginAccountRequest request,
             CancellationToken cancellationToken)
         {
-            var identity = await GetIdentityAsync(query, cancellationToken);
-            if (identity == null)
+            var getAccountQuery = _mapper.Map<GetAccountByLoginAndPasswordQuery>(request);
+            Account accountToLogin;
+            try
             {
-                return BadRequest(new {message = "Invalid username or password."});
+                accountToLogin = await _mediator.Send(getAccountQuery, cancellationToken);
+            }
+            catch (CqrsValidationException e)
+            {
+                return BadRequest(new {message = e.Message, errors = e.Data});
             }
 
-            var now = DateTime.UtcNow;
-            // создаем JWT-токен
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                notBefore: now,
-                claims: identity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                signingCredentials: new SigningCredentials
-                (
-                    AuthOptions.GetSymmetricSecurityKey(),
-                    SecurityAlgorithms.HmacSha256)
-            );
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            var response = new
+            if (accountToLogin is null)
             {
-                jwtToken = encodedJwt,
-                username = identity.Name
-            };
+                return BadRequest(new {message = "Incorrect username or password."});
+            }
 
-            return Ok(response);
+            return Ok(new LoginAccountResponse
+            {
+                JwtToken = _token.CreateJwtToken(accountToLogin),
+                AccountId = accountToLogin.Id.ToString()
+            });
         }
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] AddAccountCommand command,
+        public async Task<ActionResult<Guid>> Register([FromBody] RegisterAccountRequest request,
             CancellationToken cancellationToken)
         {
+            var addAccountCommand = _mapper.Map<AddAccountCommand>(request);
             Account newAccount;
             try
             {
-                newAccount = await _mediator.Send(command, cancellationToken);
+                newAccount = await _mediator.Send(addAccountCommand, cancellationToken);
             }
-            catch (AccountException e)
+            catch (CqrsValidationException e)
             {
-                return BadRequest(new {errorText = e.Message});
+                return BadRequest(new {message = e.Message, errors = e.Data});
             }
-            const string domain = "localhost:5001";
-            var uriString = $"https://{domain}/test/{newAccount.Id}";
-            return Created(new Uri(uriString), newAccount);
+            
+            return Created($"profile/{newAccount.Id}", newAccount.Id);
         }
-        
+
         [HttpDelete, Authorize]
         [Route("delete")]
-        public async Task<IActionResult> DeleteAsync([FromBody] string password,
+        public async Task<ActionResult> Delete([FromBody] DeleteAccountRequest request,
             CancellationToken cancellationToken)
         {
-            var accountIdClaim = User.FindFirst(ClaimTypes.SerialNumber);
-            if (accountIdClaim is null)
-            {
-                return Unauthorized();
-            }
-
-            var command = new DeleteAccountCommand
-            {
-                AccountId = Guid.Parse(accountIdClaim.Value),
-                Password = password
-            };
+            var deleteAccountCommand = _mapper.Map<DeleteAccountCommand>(request);
+            deleteAccountCommand.AccountId = User.GetUserAccountId();
             try
             {
-               await _mediator.Send(command, cancellationToken);
+                await _mediator.Send(deleteAccountCommand, cancellationToken);
             }
-            catch (AccountException e)
+            catch (CqrsValidationException e)
             {
-                return BadRequest(new {errorText = e.Message});
+                return BadRequest(new {message = e.Message, errors = e.Data});
             }
+
             return NoContent();
         }
     }

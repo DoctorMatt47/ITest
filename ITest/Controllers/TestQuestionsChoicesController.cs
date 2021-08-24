@@ -31,7 +31,7 @@ namespace ITest.Controllers
 
         [HttpGet]
         [Route("{testId}")]
-        public async Task<ActionResult<Test>> Get(string testId,
+        public async Task<ActionResult<TestQuestionsChoicesResponse>> Get(string testId,
             CancellationToken cancellationToken)
         {
             if (!Guid.TryParse(testId, out var testIdGuid))
@@ -52,7 +52,7 @@ namespace ITest.Controllers
         }
 
         [HttpPost, Authorize]
-        public async Task<ActionResult> Create([FromBody] TestQuestionsChoicesRequest request,
+        public async Task<ActionResult<Guid>> Create([FromBody] TestQuestionsChoicesRequest request,
             CancellationToken cancellationToken)
         {
             var addTestQuestionsChoicesCommand = _mapper.Map<AddTestQuestionsChoicesCommand>(request);
