@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using ITest.Cqrs.Questions;
 using ITest.Data;
-using ITest.Data.Dtos.Tests;
 using ITest.Data.Entities.Tests;
 using MediatR;
 
@@ -11,8 +12,14 @@ namespace ITest.Cqrs.Tests
 {
     public class AddTestQuestionsChoicesCommand : IRequest<Test>
     {
-        public TestDto TestDto { get; set; }
         public Guid AccountId { get; set; }
+
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        public List<AddQuestionChoicesCommand> Questions { get; set; }
+            = new List<AddQuestionChoicesCommand>();
     }
 
     public class AddTestQuestionsChoicesCommandHandler : BaseHandler,
@@ -27,7 +34,7 @@ namespace ITest.Cqrs.Tests
 
         public async Task<Test> Handle(AddTestQuestionsChoicesCommand command, CancellationToken cancellationToken)
         {
-            var newTest = _mapper.Map<Test>(command.TestDto);
+            var newTest = _mapper.Map<Test>(command);
             newTest.AccountId = command.AccountId;
 
             await _db.Tests.AddAsync(newTest, cancellationToken);
