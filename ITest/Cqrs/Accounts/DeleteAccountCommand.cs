@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
+using ITest.Configs;
 using ITest.Data;
 using ITest.Exceptions;
 using MediatR;
@@ -36,6 +38,15 @@ namespace ITest.Cqrs.Accounts
 
             _db.Accounts.Remove(accountToDelete);
             return Unit.Value;
+        }
+    }
+    
+    public class DeleteAccountCommandValidator : AbstractValidator<DeleteAccountCommand>
+    {
+        public DeleteAccountCommandValidator()
+        {
+            RuleFor(c => c.Password).NotNull()
+                .Length(5, 100).Matches(RegularExpression.Password);
         }
     }
 }

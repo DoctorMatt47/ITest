@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
+using ITest.Configs;
 using ITest.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,5 +27,14 @@ namespace ITest.Cqrs.Tests
             => await _db.Tests.Where(test => test.Title.Contains(query.SearchString))
                 .Union(_db.Tests.Where(test => test.Description.Contains(query.SearchString)))
                 .CountAsync(cancellationToken);
+    }
+    
+    public class GetTestCountBySearchStringQueryValidator : AbstractValidator<GetTestCountBySearchStringQuery>
+    {
+        public GetTestCountBySearchStringQueryValidator()
+        {
+            RuleFor(q => q.SearchString).NotNull()
+                .Matches(RegularExpression.TestTitle);
+        }
     }
 }

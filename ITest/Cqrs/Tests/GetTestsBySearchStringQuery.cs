@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
+using ITest.Configs;
 using ITest.Data;
 using ITest.Data.Entities.Tests;
 using MediatR;
@@ -11,8 +13,6 @@ namespace ITest.Cqrs.Tests
 {
     public class GetTestsBySearchStringQuery : IRequest<IEnumerable<Test>>
     {
-        public GetTestsBySearchStringQuery(string searchString) => SearchString = searchString;
-        
         public string SearchString { get; set; }
         public int PagesToSkip { get; set; }
     }
@@ -34,5 +34,17 @@ namespace ITest.Cqrs.Tests
                 .Skip(MaxElementsOnOnePage * query.PagesToSkip)
                 .Take(MaxElementsOnOnePage)
                 .ToListAsync(cancellationToken);
+    }
+    
+    public class GetTestsBySearchStringQueryValidator : AbstractValidator<GetTestsBySearchStringQuery>
+    {
+        public GetTestsBySearchStringQueryValidator()
+        {
+            RuleFor(q => q.SearchString).NotNull()
+                .Matches(RegularExpression.TestTitle);
+
+            RuleFor(q => q.PagesToSkip).NotNull()
+                .GreaterThanOrEqualTo(0);
+        }
     }
 }

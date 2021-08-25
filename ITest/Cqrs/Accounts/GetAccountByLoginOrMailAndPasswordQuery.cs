@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using ITest.Data;
 using ITest.Data.Entities.Accounts;
 using MediatR;
@@ -35,6 +36,18 @@ namespace ITest.Cqrs.Accounts
                 new GetAccountByLoginQuery(query.LoginOrEmail),
                 cancellationToken);
             return userAccount?.Password == query.Password ? userAccount : null;
+        }
+    }
+
+    public class GetAccountByLoginAndPasswordQueryValidator : AbstractValidator<GetAccountByLoginAndPasswordQuery>
+    {
+        public GetAccountByLoginAndPasswordQueryValidator()
+        {
+            RuleFor(q => q.LoginOrEmail).NotNull()
+                .Length(2, 100);
+
+            RuleFor(q => q.Password).NotNull()
+                .Length(5, 100).Matches("^(?=.*[a-zA-Z])(?!.*\\s).*$");
         }
     }
 }
