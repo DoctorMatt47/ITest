@@ -75,47 +75,5 @@ namespace ITest.Controllers
             var uriString = $"/test-preview/{createdTest.Id}";
             return Created(uriString, createdTest.Id);
         }
-
-        [HttpPut, Authorize]
-        [Route("{testId}")]
-        public async Task<ActionResult<Test>> Update(Guid testId,
-            [FromBody] TestQuestionsChoicesRequest request,
-            CancellationToken cancellationToken)
-        {
-            if (User.Identity is null)
-            {
-                return Unauthorized();
-            }
-
-            var userAccount =
-                await _mediator.Send(new GetAccountByLoginQuery(User.Identity.Name), cancellationToken);
-
-            var updateTestCommand = new UpdateTestCommand
-            {
-                AccountId = userAccount.Id,
-                TestId = testId,
-                TestRequest = request
-            };
-
-            Test updatedTest;
-            try
-            {
-                updatedTest = await _mediator.Send(updateTestCommand, cancellationToken);
-            }
-            catch (TestForbiddenException e)
-            {
-                return Forbid(e.Message);
-            }
-            catch (TestNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-            catch (TestException e)
-            {
-                return BadRequest(e.Message);
-            }
-
-            return Ok(updatedTest);
-        }
     }
 }
