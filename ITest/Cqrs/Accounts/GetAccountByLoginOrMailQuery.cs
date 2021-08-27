@@ -29,7 +29,7 @@ namespace ITest.Cqrs.Accounts
 
         public async Task<Account> Handle(GetAccountByLoginOrMailQuery query, CancellationToken cancellationToken)
             => await _db.Accounts.FirstOrDefaultAsync(
-                acc => acc.Login == query.Login || acc.Mail == query.Mail,
+                acc => acc.Login == query.Login || acc.Email == query.Mail,
                 cancellationToken);
     }
 }

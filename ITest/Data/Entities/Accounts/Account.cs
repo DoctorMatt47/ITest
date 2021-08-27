@@ -16,7 +16,7 @@ namespace ITest.Data.Entities.Accounts
         
         [Required]
         [MaxLength(100)]
-        public string Mail { get; set; }
+        public string Email { get; set; }
         
         [MaxLength(100)]
         public string City { get; set; }
@@ -26,6 +26,7 @@ namespace ITest.Data.Entities.Accounts
         public bool IsConfirmed { get; set; } = false;
 
         public List<Test> Tests { get; set; } = new List<Test>();
-        public List<TestAnswer> TestAnswers { get; set; } = new List<TestAnswer>();
+        public List<TestAnswer> TestAnswers { get; set; }
+            = new List<TestAnswer>();
     }
 }
