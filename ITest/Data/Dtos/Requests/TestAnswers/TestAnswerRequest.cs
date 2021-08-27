@@ -1,9 +1,8 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace ITest.Data.Dtos.TestAnswers
+namespace ITest.Data.Dtos.Requests.TestAnswers
 {
-    public class TestAnswerDto
+    public class TestAnswerRequest
     {
         public string Answer { get; set; }
             
