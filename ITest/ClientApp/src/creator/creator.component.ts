@@ -8,6 +8,7 @@ import {QuestionType} from "../models/tests/question/question-type.enum";
 import {HttpClient, HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {TestRepositoryService} from "../services/api/test-repository.service";
 import {Observer} from "rxjs";
+import {TestQuestionsChoicesService} from "../services/api/test-questions-choices.service";
 
 @Component({
     selector: 'creator',
@@ -19,7 +20,7 @@ export class CreatorComponent implements OnInit {
     questions: Array<Question> = new Array<Question>();
     test: Test = new Test();
 
-    constructor(private _accounts: TestRepositoryService,
+    constructor(private _testsQuestionsChoices: TestQuestionsChoicesService,
                 private _token: TokenService,
                 private _router: Router) {
         this.test.questions = new Array<Question>();
@@ -84,17 +85,17 @@ export class CreatorComponent implements OnInit {
             error: (response: HttpErrorResponse) => {
                 console.log(response);
             },
-            next: (next: HttpResponse<Test>) => {
+            next: (next: HttpResponse<any>) => {
                 this.test.id = next.body.id;
                 console.log(next.url);
                 console.log(next.body);
             },
             complete: () => {
-                const testPreviewUrl = `'/test-preview'${this.test.id}`;
+                const testPreviewUrl = `/test-preview/${this.test.id}`;
                 this._router.navigate([testPreviewUrl]);
             }
         }
         console.log(this.test);
-        this._accounts.createTest(this.test).subscribe(observer)
+        this._testsQuestionsChoices.create(this.test).subscribe(observer)
     }
 }

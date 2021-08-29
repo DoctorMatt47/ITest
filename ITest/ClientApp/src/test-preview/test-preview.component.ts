@@ -35,7 +35,7 @@ export class TestPreviewComponent implements OnInit {
             complete: () => {
             }
         }
-        this._tests.getTestPreview(this.test.id).subscribe(observer);
+        this._tests.get(this.test.id).subscribe(observer);
     }
 
     passTest(): void {
@@ -43,7 +43,7 @@ export class TestPreviewComponent implements OnInit {
             const redirectState = {state: {redirect: this._router.url}};
             this._router.navigate(['/login'], redirectState);
         } else {
-            this._router.navigate([[`/test/${this.test.id}`]]);
+            this._router.navigate([`./test/${this.test.id}`]);
         }
     }
 
