@@ -29,17 +29,17 @@ namespace ITest.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Mail")
-                        .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ModifiedDateTime")
@@ -58,14 +58,14 @@ namespace ITest.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.Choice", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.Choice", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ChoiceString")
-                        .HasMaxLength(255)
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -84,7 +84,7 @@ namespace ITest.Migrations
                     b.ToTable("Choices");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.Question", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.Question", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,7 +114,7 @@ namespace ITest.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.Test", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.Test", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -149,7 +149,7 @@ namespace ITest.Migrations
                     b.ToTable("Tests");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.TestAnswer", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.TestAnswer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -190,9 +190,9 @@ namespace ITest.Migrations
                     b.ToTable("TestAnswers");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.Choice", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.Choice", b =>
                 {
-                    b.HasOne("ITest.Models.Tests.Question", "Question")
+                    b.HasOne("ITest.Data.Entities.Tests.Question", "Question")
                         .WithMany("Choices")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -201,9 +201,9 @@ namespace ITest.Migrations
                     b.Navigation("Question");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.Question", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.Question", b =>
                 {
-                    b.HasOne("ITest.Models.Tests.Test", "Test")
+                    b.HasOne("ITest.Data.Entities.Tests.Test", "Test")
                         .WithMany("Questions")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -212,7 +212,7 @@ namespace ITest.Migrations
                     b.Navigation("Test");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.Test", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.Test", b =>
                 {
                     b.HasOne("ITest.Data.Entities.Accounts.Account", "Account")
                         .WithMany("Tests")
@@ -223,7 +223,7 @@ namespace ITest.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.TestAnswer", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.TestAnswer", b =>
                 {
                     b.HasOne("ITest.Data.Entities.Accounts.Account", "Account")
                         .WithMany("TestAnswers")
@@ -231,17 +231,17 @@ namespace ITest.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ITest.Models.Tests.Choice", "Choice")
+                    b.HasOne("ITest.Data.Entities.Tests.Choice", "Choice")
                         .WithMany("TestAnswers")
                         .HasForeignKey("ChoiceId");
 
-                    b.HasOne("ITest.Models.Tests.Question", "Question")
+                    b.HasOne("ITest.Data.Entities.Tests.Question", "Question")
                         .WithMany("TestAnswers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ITest.Models.Tests.Test", "Test")
+                    b.HasOne("ITest.Data.Entities.Tests.Test", "Test")
                         .WithMany("TestAnswers")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -263,19 +263,19 @@ namespace ITest.Migrations
                     b.Navigation("Tests");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.Choice", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.Choice", b =>
                 {
                     b.Navigation("TestAnswers");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.Question", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.Question", b =>
                 {
                     b.Navigation("Choices");
 
                     b.Navigation("TestAnswers");
                 });
 
-            modelBuilder.Entity("ITest.Models.Tests.Test", b =>
+            modelBuilder.Entity("ITest.Data.Entities.Tests.Test", b =>
                 {
                     b.Navigation("Questions");
 
