@@ -14,8 +14,8 @@ namespace ITest.Data.Dtos.Responses.Tests
         
         public uint VisitorsCount { get; set; }
 
-        public List<QuestionChoicesRequest> Questions { get; set; }
-            = new List<QuestionChoicesRequest>();
+        public List<QuestionChoicesResponse> Questions { get; set; }
+            = new List<QuestionChoicesResponse>();
     }
     
     public class QuestionChoicesResponse : BaseResponse
@@ -24,8 +24,8 @@ namespace ITest.Data.Dtos.Responses.Tests
 
         public QuestionType QuestionType { get; set; }
 
-        public List<ChoiceRequest> Choices { get; set; } =
-            new List<ChoiceRequest>();
+        public List<ChoiceResponse> Choices { get; set; } =
+            new List<ChoiceResponse>();
     }
     
     public class ChoiceResponse : BaseResponse
