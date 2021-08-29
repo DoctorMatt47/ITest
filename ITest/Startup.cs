@@ -3,10 +3,11 @@ using AutoMapper;
 using FluentValidation;
 using ITest.Configs;
 using ITest.Configs.Profiles;
+using ITest.Cqrs;
+using ITest.Cqrs.Tests;
 using ITest.Data;
-using ITest.Data.Dtos.Tests;
-using ITest.Data.Entities.Tests;
-using ITest.Validators.Tests;
+using ITest.Services.Identity;
+using ITest.Services.Tokens;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -33,40 +34,38 @@ namespace ITest
                 options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    // указывает, будет ли валидироваться издатель при валидации токена
                     ValidateIssuer = true,
-                    // строка, представляющая издателя
-                    ValidIssuer = AuthOptions.ISSUER,
-
-                    // будет ли валидироваться потребитель токена
+                    ValidIssuer = AuthOptions.Issuer,
                     ValidateAudience = true,
-                    // установка потребителя токена
-                    ValidAudience = AuthOptions.AUDIENCE,
-                    // будет ли валидироваться время существования
+                    ValidAudience = AuthOptions.Audience,
                     ValidateLifetime = true,
-
-                    // установка ключа безопасности
                     IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                    // валидация ключа безопасности
-                    ValidateIssuerSigningKey = true,
+                    ValidateIssuerSigningKey = true
                 };
             });
+            
             services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>),
+                typeof(ValidationBehaviour<,>));
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+            services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<ITokenService, TokenService>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new TestProfile());
-                mc.AddProfile(new QuestionProfile());
-                mc.AddProfile(new ChoiceProfile());
+                mc.AddProfile(new RequestsProfile());
+                mc.AddProfile(new ResponsesProfile());
                 mc.AddProfile(new TestAnswerProfile());
+                mc.AddProfile(new AddTestQuestionsChoicesCommandProfile());
             });
 
             services.AddSingleton(mapperConfig.CreateMapper());
-            
-            services.AddTransient<IValidator<TestDto>, TestValidator>();
-            services.AddTransient<IValidator<QuestionDto>, QuestionValidator>();
 
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
             services.AddControllers();
         }
 
