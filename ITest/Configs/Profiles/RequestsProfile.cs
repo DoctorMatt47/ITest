@@ -13,7 +13,11 @@ namespace ITest.Configs.Profiles
             CreateMap<LoginAccountRequest, GetAccountByLoginAndPasswordQuery>();
             CreateMap<RegisterAccountRequest, AddAccountCommand>();
             CreateMap<DeleteAccountRequest, DeleteAccountCommand>();
+            
             CreateMap<TestQuestionsChoicesRequest, AddTestQuestionsChoicesCommand>();
+            CreateMap<QuestionChoicesRequest, AddTestQuestionsChoicesCommand.QuestionChoicesDto>();
+            CreateMap<ChoiceRequest, AddTestQuestionsChoicesCommand.QuestionChoicesDto.ChoiceDto>();
+            
             CreateMap<DeleteAccountRequest, DeleteAccountCommand>();
             CreateMap<DeleteAccountRequest, DeleteAccountCommand>();
         }

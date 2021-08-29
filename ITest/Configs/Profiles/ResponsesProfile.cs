@@ -11,7 +11,10 @@ namespace ITest.Configs.Profiles
         public ResponsesProfile()
         {
             CreateMap<Test, TestResponse>();
+
             CreateMap<Test, TestQuestionsChoicesResponse>();
+            CreateMap<Question, QuestionChoicesResponse>();
+            CreateMap<Choice, ChoiceResponse>();
         }
     }
 }
