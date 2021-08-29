@@ -73,7 +73,7 @@ namespace ITest.Controllers
             }
 
             var uriString = $"/test-preview/{createdTest.Id}";
-            return Created(uriString, createdTest.Id);
+            return Created(uriString, new{createdTest.Id});
         }
     }
 }

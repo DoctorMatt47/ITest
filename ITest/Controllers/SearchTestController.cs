@@ -23,7 +23,7 @@ namespace ITest.Controllers
         }
 
         [HttpGet]
-        [Route("{searchString}/{pagesToSkip}")]
+        [Route("{searchString}/{pagesToSkip:int}")]
         public async Task<ActionResult<IEnumerable<Test>>> GetBySearchString(int pagesToSkip, string searchString,
             CancellationToken cancellationToken)
         {
@@ -34,7 +34,7 @@ namespace ITest.Controllers
             };
             var searchedTests =
                 await _mediator.Send(getTestsBySearchStringQuery, cancellationToken);
-            return Ok(searchedTests);
+            return Ok(new { Tests = searchedTests });
         }
 
         [HttpGet]
@@ -44,8 +44,8 @@ namespace ITest.Controllers
         {
             var getTestCountBySearchStringQuery = new GetTestCountBySearchStringQuery(searchString);
             var testCount = await _mediator.Send(getTestCountBySearchStringQuery, cancellationToken);
-            var pagesCount = Math.Ceiling((double) testCount / MaxElementsOnOnePage);
-            return Ok((int) pagesCount);
+            var pagesCount = Math.Ceiling((double)testCount / MaxElementsOnOnePage);
+            return Ok((int)pagesCount);
         }
     }
 }

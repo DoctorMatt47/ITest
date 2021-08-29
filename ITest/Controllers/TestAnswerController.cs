@@ -5,9 +5,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using ITest.Cqrs.TestAnswers;
-using ITest.Data.Dtos.TestAnswers;
+using ITest.Data.Dtos.Requests.TestAnswers;
 using ITest.Data.Entities.Tests;
+using ITest.Exceptions.Cqrs;
+using ITest.Extensions;
+using ITest.Services.Tokens;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,10 +24,12 @@ namespace ITest.Controllers
     public class TestAnswerController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public TestAnswerController(IMediator mediator)
+        public TestAnswerController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -35,17 +41,27 @@ namespace ITest.Controllers
         }
 
         [HttpPost, Authorize]
-        [Route("{testId}")]
-        public async Task<IEnumerable<TestAnswer>> Post(Guid testId, [FromBody] IEnumerable<TestAnswerDto> dtos,
+        [Route("{testId:guid}")]
+        public async Task<ActionResult<IEnumerable<TestAnswer>>> Post(Guid testId, 
+            [FromBody] TestAnswersRequest request,
             CancellationToken cancellationToken)
         {
-            var addAnswersCommand = new AddTestAnswersCommand
+            var addTestAnswersByTestIdCommand = 
+                _mapper.Map<AddTestAnswersByTestIdCommand>(request);
+            addTestAnswersByTestIdCommand.TestId = testId;
+            addTestAnswersByTestIdCommand.AccountId = User.GetUserAccountId();
+
+            IEnumerable<TestAnswer> answers;
+            try
             {
-                TestId = testId,
-                TestAnswerDtos = dtos,
-                AccountId = Guid.Parse(User.FindFirstValue(ClaimTypes.SerialNumber))
-            };
-            return await _mediator.Send(addAnswersCommand, cancellationToken);
+                answers = await _mediator.Send(addTestAnswersByTestIdCommand, cancellationToken);
+            }
+            catch (CqrsValidationException e)
+            {
+                return BadRequest(new { message = e.Message, errors = e.Data });
+            }
+
+            return Created("", new{answers});
         }
     }
 }

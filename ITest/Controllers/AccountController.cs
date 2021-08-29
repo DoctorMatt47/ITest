@@ -48,6 +48,10 @@ namespace ITest.Controllers
             {
                 return BadRequest(new {message = e.Message, errors = e.Data});
             }
+            catch (Exception e)
+            {
+                return BadRequest(new {message = e.Message, errors = e.Data});
+            }
 
             if (accountToLogin is null)
             {
@@ -77,7 +81,7 @@ namespace ITest.Controllers
                 return BadRequest(new {message = e.Message, errors = e.Data});
             }
             
-            return Created($"profile/{newAccount.Id}", newAccount.Id);
+            return Created($"profile/{newAccount.Id}", new{newAccount.Id});
         }
 
         [HttpDelete, Authorize]
