@@ -130,6 +130,8 @@ namespace ITest.Cqrs.Tests
         public AddTestQuestionsChoicesCommandProfile()
         {
             CreateMap<AddTestQuestionsChoicesCommand, Test>();
+            CreateMap<AddTestQuestionsChoicesCommand.QuestionChoicesDto, Question>();
+            CreateMap<AddTestQuestionsChoicesCommand.QuestionChoicesDto.ChoiceDto, Choice>();
         }
     }
 }
