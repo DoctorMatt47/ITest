@@ -11,7 +11,7 @@ export class AccountRepositoryService {
 
     login(loginOrEmail: string, password: string) {
         let body = {
-            login: loginOrEmail,
+            loginOrEmail: loginOrEmail,
             password: password
         }
         return this._http.post(this._url + '/login', body);
