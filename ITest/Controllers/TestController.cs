@@ -30,16 +30,11 @@ namespace ITest.Controllers
 
 
         [HttpGet]
-        [Route("{testId}")]
-        public async Task<ActionResult<TestResponse>> Get(string testId,
+        [Route("{testId:guid}")]
+        public async Task<ActionResult<TestResponse>> Get(Guid testId,
             CancellationToken cancellationToken)
         {
-            if (!Guid.TryParse(testId, out var testIdGuid))
-            {
-                return BadRequest(new {message = "Test id is incorrect"});
-            }
-
-            var query = new GetTestByIdQuery(testIdGuid);
+            var query = new GetTestByIdQuery(testId);
             var testToGet = await _mediator.Send(query, cancellationToken);
             if (testToGet is null)
             {
@@ -51,7 +46,7 @@ namespace ITest.Controllers
         }
 
         [HttpDelete, Authorize]
-        [Route("{testId}")]
+        [Route("{testId:guid}")]
         public async Task<ActionResult> Delete(Guid testId,
             CancellationToken cancellationToken)
         {

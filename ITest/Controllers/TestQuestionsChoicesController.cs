@@ -30,16 +30,11 @@ namespace ITest.Controllers
         }
 
         [HttpGet]
-        [Route("{testId}")]
-        public async Task<ActionResult<TestQuestionsChoicesResponse>> Get(string testId,
+        [Route("{testId:guid}")]
+        public async Task<ActionResult<TestQuestionsChoicesResponse>> Get(Guid testId,
             CancellationToken cancellationToken)
         {
-            if (!Guid.TryParse(testId, out var testIdGuid))
-            {
-                return BadRequest(new {message = "Test id is incorrect"});
-            }
-
-            var query = new GetTestQuestionsChoicesByTestIdQuery(testIdGuid);
+            var query = new GetTestQuestionsChoicesByTestIdQuery(testId);
             var testQuestionsChoicesToGet = await _mediator.Send(query, cancellationToken);
             if (testQuestionsChoicesToGet is null)
             {
