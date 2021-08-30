@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ITest.Cqrs.TestAnswers;
 using ITest.Data.Dtos.Requests.TestAnswers;
+using ITest.Data.Dtos.Responses.TestAnswers;
 using ITest.Data.Entities.Tests;
 using ITest.Exceptions.Cqrs;
 using ITest.Extensions;
@@ -46,10 +47,13 @@ namespace ITest.Controllers
             [FromBody] TestAnswersRequest request,
             CancellationToken cancellationToken)
         {
-            var addTestAnswersByTestIdCommand = 
-                _mapper.Map<AddTestAnswersByTestIdCommand>(request);
-            addTestAnswersByTestIdCommand.TestId = testId;
-            addTestAnswersByTestIdCommand.AccountId = User.GetUserAccountId();
+            var addTestAnswersByTestIdCommand = new AddTestAnswersByTestIdCommand
+            {
+                TestAnswerDtos = request.Answers.Select(ans => 
+                    _mapper.Map<AddTestAnswersByTestQuestionsChoicesCommand.TestAnswerDto>(ans)),
+                TestId = testId,
+                AccountId = User.GetUserAccountId()
+            };
 
             IEnumerable<TestAnswer> answers;
             try
@@ -61,7 +65,10 @@ namespace ITest.Controllers
                 return BadRequest(new { message = e.Message, errors = e.Data });
             }
 
-            return Created("", new{answers});
+            var response = 
+                answers.Select(ans => _mapper.Map<TestAnswerResponse>(ans));
+
+            return Created("", response);
         }
     }
 }
