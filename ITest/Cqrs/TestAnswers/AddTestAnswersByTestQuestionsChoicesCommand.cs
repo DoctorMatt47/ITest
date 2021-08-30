@@ -43,10 +43,26 @@ namespace ITest.Cqrs.TestAnswers
             CancellationToken cancellationToken)
         {
             var testAnswers =
-                command.TestAnswerDtos.Select(dto => _mapper.Map<TestAnswer>(dto)).ToList();
+                command.TestAnswerDtos.Select(dto => new TestAnswer
+                {
+                    Answer = dto.Answer,
+                    ChoiceId = dto.ChoiceId,
+                    QuestionId = dto.QuestionId,
+                    TestId = command.Test.Id,
+                    AccountId = command.AccountId
+                }).ToList();
 
             await _db.TestAnswers.AddRangeAsync(testAnswers, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
             return testAnswers;
+        }
+    }
+
+    public class AddTestAnswersByTestCommandProfile : Profile
+    {
+        public AddTestAnswersByTestCommandProfile()
+        {
+            CreateMap<AddTestAnswersByTestQuestionsChoicesCommand.TestAnswerDto, TestAnswer>();
         }
     }
 
@@ -56,16 +72,20 @@ namespace ITest.Cqrs.TestAnswers
             => RuleFor(cmd => cmd.TestAnswerDtos).NotNull()
                 .ForEach(dto => dto.NotNull().SetValidator(new TestAnswerDtoValidator()))
                 .Must((cmd, dtos) => dtos.All(ans => cmd.Test.Questions.Select(q => q.Id).Contains(ans.QuestionId)))
-                .Must((cmd, dtos) => dtos.All(ans =>
-                    cmd.Test.Questions.SelectMany(q => q.Choices.Select(c => c.Id)).Contains(ans.QuestionId)))
+                .WithMessage("1")
+                .Must((cmd, dtos) => dtos.All(ans => 
+                    !ans.ChoiceId.HasValue 
+                    || cmd.Test.Questions.SelectMany(q => 
+                        q.Choices.Select(c => c.Id)).Contains(ans.ChoiceId.Value)))
+                .WithMessage("2")
                 .Must(dtos =>
                 {
                     var dtoList = dtos.ToList();
                     return dtoList.Count == dtoList.GroupBy(ans => ans.ChoiceId).Select(g => g.First()).Count();
-                })
-                .Must(TextQuestionTypeCheck)
-                .Must(SingleChoiceQuestionTypeCheck)
-                .Must(MultipleChoiceQuestionTypeCheck);
+                }).WithMessage("3")
+                .Must(TextQuestionTypeCheck).WithMessage("Text question type check failed")
+                .Must(SingleChoiceQuestionTypeCheck).WithMessage("Single choice question type check failed")
+                .Must(MultipleChoiceQuestionTypeCheck).WithMessage("Multiple choice question type check failed");
 
 
         private static bool TextQuestionTypeCheck(AddTestAnswersByTestQuestionsChoicesCommand cmd,
