@@ -5,7 +5,7 @@ import {TokenService} from "../tokens/token.service";
 import {Test} from "../../models/tests/test.model";
 
 @Injectable()
-export class TestQuestionsChoicesService {
+export class TestQuestionsChoicesRepositoryService {
     private readonly _url = "api/tests-questions-choices";
 
     constructor(private _http: HttpClient,
