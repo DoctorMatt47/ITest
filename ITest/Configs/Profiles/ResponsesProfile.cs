@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ITest.Cqrs.Accounts;
 using ITest.Data.Dtos.Requests.Accounts;
+using ITest.Data.Dtos.Responses.TestAnswers;
 using ITest.Data.Dtos.Responses.Tests;
 using ITest.Data.Entities.Tests;
 
@@ -15,6 +16,8 @@ namespace ITest.Configs.Profiles
             CreateMap<Test, TestQuestionsChoicesResponse>();
             CreateMap<Question, QuestionChoicesResponse>();
             CreateMap<Choice, ChoiceResponse>();
+
+            CreateMap<TestAnswer, TestAnswerResponse>();
         }
     }
 }

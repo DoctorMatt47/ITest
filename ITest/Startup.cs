@@ -4,6 +4,7 @@ using FluentValidation;
 using ITest.Configs;
 using ITest.Configs.Profiles;
 using ITest.Cqrs;
+using ITest.Cqrs.TestAnswers;
 using ITest.Cqrs.Tests;
 using ITest.Data;
 using ITest.Services.Identity;
@@ -56,8 +57,8 @@ namespace ITest
             {
                 mc.AddProfile(new RequestsProfile());
                 mc.AddProfile(new ResponsesProfile());
-                mc.AddProfile(new TestAnswerProfile());
                 mc.AddProfile(new AddTestQuestionsChoicesCommandProfile());
+                mc.AddProfile(new AddTestAnswersByTestCommandProfile());
             });
 
             services.AddSingleton(mapperConfig.CreateMapper());

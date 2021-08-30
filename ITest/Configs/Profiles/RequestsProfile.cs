@@ -1,7 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Collections;
+using AutoMapper;
 using ITest.Cqrs.Accounts;
+using ITest.Cqrs.TestAnswers;
 using ITest.Cqrs.Tests;
 using ITest.Data.Dtos.Requests.Accounts;
+using ITest.Data.Dtos.Requests.TestAnswers;
 using ITest.Data.Dtos.Requests.Tests;
 
 namespace ITest.Configs.Profiles
@@ -20,6 +23,9 @@ namespace ITest.Configs.Profiles
             
             CreateMap<DeleteAccountRequest, DeleteAccountCommand>();
             CreateMap<DeleteAccountRequest, DeleteAccountCommand>();
+            
+            CreateMap<TestAnswersRequest, AddTestAnswersByTestIdCommand>();
+            CreateMap<TestAnswerRequest, AddTestAnswersByTestQuestionsChoicesCommand.TestAnswerDto>();
         }
     }
 }
