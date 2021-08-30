@@ -8,19 +8,19 @@ import {QuestionType} from "../models/tests/question/question-type.enum";
 import {HttpClient, HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {TestRepositoryService} from "../services/api/test-repository.service";
 import {Observer} from "rxjs";
-import {TestQuestionsChoicesService} from "../services/api/test-questions-choices.service";
+import {TestQuestionsChoicesRepositoryService} from "../services/api/test-questions-choices-repository.service";
 
 @Component({
     selector: 'creator',
     templateUrl: './creator.component.html',
     styleUrls: [],
-    providers: [TokenService, TestRepositoryService, HttpClient]
+    providers: [TestQuestionsChoicesRepositoryService, TokenService, TestRepositoryService, HttpClient]
 })
 export class CreatorComponent implements OnInit {
     questions: Array<Question> = new Array<Question>();
     test: Test = new Test();
 
-    constructor(private _testsQuestionsChoices: TestQuestionsChoicesService,
+    constructor(private _testsQuestionsChoices: TestQuestionsChoicesRepositoryService,
                 private _token: TokenService,
                 private _router: Router) {
         this.test.questions = new Array<Question>();
