@@ -3,11 +3,11 @@
     <div class="main-bar creator">
       <span class="display-4 d-flex justify-content-center">Test</span>
       <form>
-        <label for="test-title">
+        <label [for]="test.id">
           Test title:
         </label>
         <input type="text" class="form-control"
-               name="test-title" id="test-title"
+               name="test-title" [id]="test.id"
                readonly [(ngModel)]="test.title">
         <label for="test-description">
           Short description:
@@ -28,7 +28,7 @@
             Question:
           </label>
           <input type="text" class="form-control"
-                 [name]="'question-'+i" [id]="'question-'+i"
+                 [name]="'question-'+i" [id]="question.id"
                  [(ngModel)]="question.questionString" readonly>
           <label>
             Choices:
@@ -36,27 +36,33 @@
           <input *ngIf="question.questionType==3"
                  type="text" class="form-control"
                  [name]="'question-'+i+'-choice'"
-                 [id]="'question-'+i+'-choice'">
+                 [id]="'question-'+i+'-choice'"
+                 (change)="changeText($event, i)">
           <div class="form-check">
             <div *ngFor="let choice of question.choices; index as j">
               <label class="form-check-label">
                 <input *ngIf="question.questionType==1"
-                       type="radio" class="form-check-input"
+                       type="radio" class="form-check-input mt-2"
                        [name]="'question-'+i+'-choice'"
-                       [id]="'question-'+i+'-choice-'+j"
-                       value="checkedValue">
+                       [id]="choice.id"
+                       value="checkedValue"
+                       (change)="changeRadioButton($event, i, j)">
                 <input *ngIf="question.questionType==2"
-                       type="checkbox" class="form-check-input"
+                       type="checkbox" class="form-check-input mt-2"
                        [name]="'question-'+i+'-choice'"
-                       [id]="'question-'+i+'-choice-'+j"
-                       value="checkedValue">
+                       [id]="choice.id"
+                       value="checkedValue"
+                       (change)="changeCheckboxButton($event, i, j)">
                 {{choice.choiceString}}
               </label><br>
             </div>
           </div>
         </div>
         <div class="d-flex justify-content-center">
-          <button type="submit" class="btn btn-primary btn-block btn-lg mt-4">Submit</button>
+          <button type="submit" class="btn btn-primary btn-block btn-lg mt-4"
+                  (click)="submit()">
+            Submit
+          </button>
         </div>
       </form>
     </div>
